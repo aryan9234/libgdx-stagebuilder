@@ -30,6 +30,10 @@ public abstract class ActorBuilder {
 
     public static int calculateAlignment(String s) {
         try {
+            if (s == null) {
+                // IOS does not catch NullPointerException
+                return Align.left;
+            }
             String[] sArray = s.split("\\|");
             int result = NO_ALIGN;
             for (String val : sArray) {
