@@ -30,12 +30,11 @@ public class ResolutionHelper {
      */
     public ResolutionHelper(float targetWidth, float targetHeight, float screenWidth, float screenHeight, float selectedResolutionWidth) {
         super();
-        resize(targetWidth,targetHeight,screenWidth,screenHeight);
+        resize(targetWidth,targetHeight,screenWidth,screenHeight, selectedResolutionWidth);
         this.targetAssetSizeRatio = gameAreaBounds.x / selectedResolutionWidth;
-
     }
 
-    public void resize(float targetWidth, float targetHeight, float screenWidth, float screenHeight) {
+    public void resize(float targetWidth, float targetHeight, float screenWidth, float screenHeight, float selectedResolutionWidth) {
         this.targetWidth = targetWidth;
         this.targetHeight = targetHeight;
         this.targetAspectRatio = targetWidth / targetHeight;
@@ -43,6 +42,12 @@ public class ResolutionHelper {
         this.screenHeight = screenHeight;
         this.gameAreaBounds = calculateGameAreaBounds(targetAspectRatio, screenWidth, screenHeight);
         this.gameAreaPosition = calculateGameAreaPosition(targetAspectRatio, screenWidth, screenHeight);
+        if(screenWidth>screenHeight){
+            this.targetAssetSizeRatio = gameAreaBounds.x / selectedResolutionWidth;
+        } else {
+            this.targetAssetSizeRatio = gameAreaBounds.y / selectedResolutionWidth;
+        }
+
     }
 
     /**
