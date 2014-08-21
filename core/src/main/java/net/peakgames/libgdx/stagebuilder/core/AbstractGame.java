@@ -78,7 +78,7 @@ public abstract class AbstractGame implements ApplicationListener {
         this.resolutionHelper.resize(newTargetWidth,
                 newTargetHeight,
                 this.width,
-                this.height, fileHandleResolver.findBestResolution().x);
+                this.height);
         this.topScreen.resize(this.width, this.height);
     }
 
