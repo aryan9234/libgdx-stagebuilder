@@ -50,9 +50,6 @@ public abstract class DemoScreen extends AbstractScreen {
         debugRenderer.rect(gameAreaPosition.x+1, gameAreaPosition.y+1, gameAreaBounds.x-2, gameAreaBounds.y-2);
         debugRenderer.end();
 
-
-        Table.drawDebug(stage);
-
     }
 
 	@Override
