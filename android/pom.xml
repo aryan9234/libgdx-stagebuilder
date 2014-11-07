@@ -49,7 +49,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.android</groupId>
+			<groupId>com.google</groupId>
 			<artifactId>android</artifactId>
 			<version>${android.version}</version>
 			<scope>provided</scope>
