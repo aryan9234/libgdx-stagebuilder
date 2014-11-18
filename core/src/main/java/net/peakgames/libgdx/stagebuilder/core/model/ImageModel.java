@@ -16,6 +16,10 @@ public class ImageModel extends BaseModel {
 
     private boolean ninepatch;
     private int ninepatchOffset;
+    private int ninepatchOffsetLeft;
+    private int ninepatchOffsetRight;
+    private int ninepatchOffsetTop;
+    private int ninepatchOffsetBottom;
 
 
     public String getAtlasName() {
@@ -58,4 +62,35 @@ public class ImageModel extends BaseModel {
 
     public void setNinepatchOffset(int ninepatchOffset) {  this.ninepatchOffset = ninepatchOffset;    }
 
+    public int getNinepatchOffsetLeft() {
+        return ninepatchOffsetLeft;
+    }
+
+    public void setNinepatchOffsetLeft(int ninepatchOffsetLeft) {
+        this.ninepatchOffsetLeft = ninepatchOffsetLeft;
+    }
+
+    public int getNinepatchOffsetRight() {
+        return ninepatchOffsetRight;
+    }
+
+    public void setNinepatchOffsetRight(int ninepatchOffsetRight) {
+        this.ninepatchOffsetRight = ninepatchOffsetRight;
+    }
+
+    public int getNinepatchOffsetTop() {
+        return ninepatchOffsetTop;
+    }
+
+    public void setNinepatchOffsetTop(int ninepatchOffsetTop) {
+        this.ninepatchOffsetTop = ninepatchOffsetTop;
+    }
+
+    public int getNinepatchOffsetBottom() {
+        return ninepatchOffsetBottom;
+    }
+
+    public void setNinepatchOffsetBottom(int ninepatchOffsetBottom) {
+        this.ninepatchOffsetBottom = ninepatchOffsetBottom;
+    }
 }
