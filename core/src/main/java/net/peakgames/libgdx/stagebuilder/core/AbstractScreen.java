@@ -1,11 +1,5 @@
 package net.peakgames.libgdx.stagebuilder.core;
 
-import java.util.Map;
-
-import com.badlogic.gdx.scenes.scene2d.Group;
-import net.peakgames.libgdx.stagebuilder.core.builder.StageBuilder;
-import net.peakgames.libgdx.stagebuilder.core.util.Utils;
-
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
@@ -14,13 +8,18 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import net.peakgames.libgdx.stagebuilder.core.builder.StageBuilder;
+import net.peakgames.libgdx.stagebuilder.core.util.Utils;
 import net.peakgames.libgdx.stagebuilder.core.widgets.ToggleWidget;
+
+import java.util.Map;
 
 public abstract class AbstractScreen implements Screen {
 
@@ -36,7 +35,7 @@ public abstract class AbstractScreen implements Screen {
     private long lastScreenRefreshCheckTimestamp = System.currentTimeMillis();
     private String layoutFileChecksum;
     private boolean changesOrientation = false;
-    private static float fadeInDuration = Float.NEGATIVE_INFINITY;
+    private float fadeInDuration = Float.NEGATIVE_INFINITY;
     
     /**
      * parameters map that is used to pass configuration data for screen.
@@ -62,15 +61,15 @@ public abstract class AbstractScreen implements Screen {
         this.assetManager = game.getAssetsInterface().getAssetMAnager();
     }
 
-    public static void enableFadeIn(float fadeInDuration) {
-        AbstractScreen.fadeInDuration = fadeInDuration;
+    public void enableFadeIn(float fadeInDuration) {
+        this.fadeInDuration = fadeInDuration;
     }
 
-    public static void disableFadeIn() {
+    public void disableFadeIn() {
         fadeInDuration = Float.NEGATIVE_INFINITY;
     }
 
-    public static boolean isFadeInEnabled() {
+    public boolean isFadeInEnabled() {
         return fadeInDuration > 0;
     }
 
@@ -188,8 +187,8 @@ public abstract class AbstractScreen implements Screen {
         preShow();
         Gdx.input.setInputProcessor(this.stage);
         Gdx.app.log(TAG, "show");
-        stage.getRoot().getColor().a = 0;
         if (isFadeInEnabled()) {
+            stage.getRoot().getColor().a = 0;
             stage.addAction(Actions.fadeIn(fadeInDuration));
         }
         layoutFileChecksum = calculateLayoutFileChecksum();
