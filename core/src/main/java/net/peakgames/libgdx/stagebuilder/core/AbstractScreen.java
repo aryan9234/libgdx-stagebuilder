@@ -36,8 +36,7 @@ public abstract class AbstractScreen implements Screen {
     private long lastScreenRefreshCheckTimestamp = System.currentTimeMillis();
     private String layoutFileChecksum;
     private boolean changesOrientation = false;
-    private static boolean fadeInEnabled = false;
-    private static float fadeInDuration;
+    private static float fadeInDuration = Float.NEGATIVE_INFINITY;
     
     /**
      * parameters map that is used to pass configuration data for screen.
@@ -65,15 +64,14 @@ public abstract class AbstractScreen implements Screen {
 
     public static void enableFadeIn(float fadeInDuration) {
         AbstractScreen.fadeInDuration = fadeInDuration;
-        fadeInEnabled = true;
     }
 
     public static void disableFadeIn() {
-        fadeInEnabled = false;
+        fadeInDuration = Float.NEGATIVE_INFINITY;
     }
 
     public static boolean isFadeInEnabled() {
-        return fadeInEnabled;
+        return fadeInDuration > 0;
     }
 
 
@@ -191,7 +189,7 @@ public abstract class AbstractScreen implements Screen {
         Gdx.input.setInputProcessor(this.stage);
         Gdx.app.log(TAG, "show");
         stage.getRoot().getColor().a = 0;
-        if (fadeInEnabled) {
+        if (isFadeInEnabled()) {
             stage.addAction(Actions.fadeIn(fadeInDuration));
         }
         layoutFileChecksum = calculateLayoutFileChecksum();
