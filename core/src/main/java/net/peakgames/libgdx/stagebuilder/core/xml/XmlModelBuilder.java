@@ -138,6 +138,10 @@ public class XmlModelBuilder {
         image.setType(XmlHelper.readStringAttribute(xmlParser, "type"));
         image.setNinepatch(XmlHelper.readBooleanAttribute(xmlParser, "ninepatch", false));
         image.setNinepatchOffset(XmlHelper.readIntAttribute(xmlParser, "ninepatchOffset", 0));
+        image.setNinepatchOffsetLeft(XmlHelper.readIntAttribute(xmlParser, "npLeft", 0));
+        image.setNinepatchOffsetRight(XmlHelper.readIntAttribute(xmlParser, "npRight", 0));
+        image.setNinepatchOffsetTop(XmlHelper.readIntAttribute(xmlParser, "npTop", 0));
+        image.setNinepatchOffsetBottom(XmlHelper.readIntAttribute(xmlParser, "npBottom", 0));
         return image;
     }
 

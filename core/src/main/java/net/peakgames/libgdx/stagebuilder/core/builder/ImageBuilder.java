@@ -15,7 +15,6 @@ import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
 
 public class ImageBuilder extends ActorBuilder {
 
-
     public ImageBuilder(AssetsInterface assets, ResolutionHelper resolutionHelper, LocalizationService localizationService) {
         super(assets, resolutionHelper, localizationService);
     }
@@ -62,8 +61,17 @@ public class ImageBuilder extends ActorBuilder {
     private Image createFromTexture(ImageModel imageModel) {
         if(imageModel.getNinepatch()){
             NinePatchDrawable ninePatchDrawable = new NinePatchDrawable();
-            NinePatch patch = new NinePatch(new TextureRegion(assets.getTexture(getLocalizedString(imageModel.getTextureSrc()))),
-                    imageModel.getNinepatchOffset(), imageModel.getNinepatchOffset(), imageModel.getNinepatchOffset(), imageModel.getNinepatchOffset());
+
+            NinePatch patch;
+            if (imageModel.getNinepatchOffset() == 0) {
+
+                patch = new NinePatch(new TextureRegion(assets.getTexture(getLocalizedString(imageModel.getTextureSrc()))),
+                        imageModel.getNinepatchOffsetLeft(), imageModel.getNinepatchOffsetRight(), imageModel.getNinepatchOffsetTop(), imageModel.getNinepatchOffsetBottom());
+            } else {
+                patch = new NinePatch(new TextureRegion(assets.getTexture(getLocalizedString(imageModel.getTextureSrc()))),
+                        imageModel.getNinepatchOffset(), imageModel.getNinepatchOffset(), imageModel.getNinepatchOffset(), imageModel.getNinepatchOffset());
+            }
+
             ninePatchDrawable.setPatch(patch);
             return new Image(patch);
         }else{
@@ -74,7 +82,12 @@ public class ImageBuilder extends ActorBuilder {
 
     private Image createFromTextureAtlas(ImageModel imageModel) {
         if(imageModel.getNinepatch()){
-            return new Image(createNinePatchDrawable(imageModel.getFrame(), assets.getTextureAtlas(imageModel.getAtlasName()), imageModel.getNinepatchOffset()));
+            if (imageModel.getNinepatchOffset() != 0) {
+                return new Image(createNinePatchDrawable(imageModel.getFrame(), assets.getTextureAtlas(imageModel.getAtlasName()), imageModel.getNinepatchOffset()));
+            } else {
+                return new Image(createNinePatchDrawable(imageModel.getFrame(), assets.getTextureAtlas(imageModel.getAtlasName()), imageModel.getNinepatchOffsetLeft(),
+                        imageModel.getNinepatchOffsetRight(), imageModel.getNinepatchOffsetTop(), imageModel.getNinepatchOffsetBottom()));
+            }
         }else{
             TextureAtlas textureAtlas = assets.getTextureAtlas(imageModel.getAtlasName());
             TextureAtlas.AtlasRegion atlasRegion = textureAtlas.findRegion(getLocalizedString(imageModel.getFrame()));
@@ -85,6 +98,13 @@ public class ImageBuilder extends ActorBuilder {
     private NinePatchDrawable createNinePatchDrawable(String imageName, TextureAtlas textureAtlas ,int patchOffset) {
         NinePatchDrawable ninePatchDrawable = new NinePatchDrawable();
         NinePatch patch = new NinePatch(textureAtlas.findRegion(imageName), patchOffset, patchOffset, patchOffset, patchOffset);
+        ninePatchDrawable.setPatch(patch);
+        return ninePatchDrawable;
+    }
+
+    private NinePatchDrawable createNinePatchDrawable(String imageName, TextureAtlas textureAtlas ,int patchOffsetLeft, int patchOffsetRight, int patchOffsetTop, int patchOffsetBottom) {
+        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable();
+        NinePatch patch = new NinePatch(textureAtlas.findRegion(imageName), patchOffsetLeft, patchOffsetRight, patchOffsetTop, patchOffsetBottom);
         ninePatchDrawable.setPatch(patch);
         return ninePatchDrawable;
     }
