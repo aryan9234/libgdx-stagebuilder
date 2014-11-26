@@ -43,7 +43,7 @@
     <image name="androidLogoLeft2"   screenAlign="left"   screenPaddingLeft="30" y="240" atlas="common.atlas" frame="androidlogo" scale="0.3"/>
 
     <!-- Ninepatch multiple values (left, right, top, bottom) test -->
-    <image name="ninepatch"  x="300" y="0" width="120" height="205" frame="ninepatchtest" atlas="common.atlas" ninepatch="true" npLeft="55" npRight="55" npTop="0" npBottom="0" />
-    <image name="ninepatch"  x="300" y="300" width="240" height="205" frame="ninepatchtest" atlas="common.atlas" ninepatch="true" npLeft="55" npRight="55" npTop="0" npBottom="0" />
-    <image name="ninepatch1"  x="30" y="150" width="120" height="60" frame="ninepatchtest" atlas="common.atlas"  ninepatch="true" ninepatchOffset="55" />
+    <image name="ninepatch"  x="10" y="120" width="250" height="80" frame="ninepatch_bg" atlas="common.atlas" ninepatch="true" npLeft="5" npRight="5" npTop="5" npBottom="5" />
+    <label name="ninepatch_label" x="10" y="120" width="250"  height="80" align="center"  text="9-patch image"  fontName="default_font.fnt" fontColor="000000" />
+
 </group>
