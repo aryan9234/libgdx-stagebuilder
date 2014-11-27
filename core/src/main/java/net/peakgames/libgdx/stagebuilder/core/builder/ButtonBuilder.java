@@ -28,10 +28,10 @@ public class ButtonBuilder extends ActorBuilder {
         ButtonModel buttonModel = (ButtonModel) model;
         setTextures(buttonModel);
         Button button = new Button(up, down);
-        if (disabled != null) {
+        if (buttonModel.getFrameDisabled() != null) {
             button.getStyle().disabled = disabled;
         }
-        if ( checked != null){
+        if ( buttonModel.getFrameChecked() != null){
             button.getStyle().checked = checked;
         }
         normalizeModelSize(buttonModel, up.getMinWidth(), up.getMinHeight());
