@@ -31,14 +31,19 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 		if(stage == null || focusedActorName == null) {
 			return;
 		}
-		
+
+		initialYCoordinateMap.clear();
+		for(Actor actor : stage.getRoot().getChildren()) {
+			initialYCoordinateMap.put(actor, actor.getY());
+		}
+
 		Group rootGroup = stage.getRoot();
 		float textFieldScreenY = getScreenYOfFocusedWidget(focusedActor);
 		float topOfFocusedActor = textFieldScreenY + focusedActor.getHeight();
 		if(isTextFieldOutOfScreen(topOfFocusedActor)) {
 			float stageYDifference = screenHeight - topOfFocusedActor;
 			shiftChildren(rootGroup, stageYDifference);
-		} else {			
+		} else {
 			float stageYDifference = keyboardHeight - textFieldScreenY;
 			if(isTextFieldCoveredByKeyboard(stageYDifference)) {			
 				shiftChildren(rootGroup, stageYDifference);
@@ -127,7 +132,7 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 	@Override
 	public void softKeyboardClosed(int keyboardHeight) {
 		this.keyboardOpen = false;
-		if(stage == null) {
+		if(stage == null || focusedActorName == null) {
 			return;
 		}
 		Group rootGroup = stage.getRoot();
@@ -140,6 +145,7 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 		if(listener != null) {
 			listener.softKeyboardClosed(keyboardHeight);
 		}
+		focusedActorName = null;
 	}
 	
 }
