@@ -3,7 +3,9 @@ package net.peakgames.libgdx.stagebuilder.core.keyboard;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.util.Log;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -20,6 +22,7 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 	private float initialStageY;
 	private Map<Actor, Float> initialYCoordinateMap;
 	private int screenHeight;
+	private SoftKeyboardEventInterface keyboardEventService;
 	
 	public KeyboardManager(int screenHeight) {
 		this.screenHeight = screenHeight;
@@ -32,9 +35,10 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 			return;
 		}
 
-		initialYCoordinateMap.clear();
 		for(Actor actor : stage.getRoot().getChildren()) {
-			initialYCoordinateMap.put(actor, actor.getY());
+			if(!initialYCoordinateMap.containsKey(actor)) {
+				initialYCoordinateMap.put(actor, actor.getY());
+			}
 		}
 
 		Group rootGroup = stage.getRoot();
@@ -97,7 +101,6 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 			@Override
 			public void keyboardFocusChanged(FocusEvent event, Actor actor,
 					boolean focused) {
-				super.keyboardFocusChanged(event, actor, focused);
 				if(focused && actor instanceof TextField) {
 					textFieldFocusChanged(actor.getName());
 				}
@@ -105,7 +108,8 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 		});
 	}
 
-	public void textFieldFocusChanged(String actorName) {
+	public void textFieldFocusChanged(final String actorName) {
+		keyboardEventService.focusChanged();
 		focusedActorName = actorName;
 		if(isKeyboardOpen()) {
 			Actor focusedActor = stage.getRoot().findActor(focusedActorName);
@@ -132,7 +136,7 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 	@Override
 	public void softKeyboardClosed(int keyboardHeight) {
 		this.keyboardOpen = false;
-		if(stage == null || focusedActorName == null) {
+		if(stage == null) {
 			return;
 		}
 		Group rootGroup = stage.getRoot();
@@ -142,10 +146,14 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 				actor.setY(actorInitialY);
 			}
 		}
+		stage.setKeyboardFocus(null);
 		if(listener != null) {
 			listener.softKeyboardClosed(keyboardHeight);
 		}
-		focusedActorName = null;
+	}
+
+	public void setKeyboardEventService(SoftKeyboardEventInterface keyboardEventService) {
+		this.keyboardEventService = keyboardEventService;
 	}
 	
 }
