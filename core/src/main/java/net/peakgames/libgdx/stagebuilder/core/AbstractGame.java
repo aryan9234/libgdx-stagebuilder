@@ -291,6 +291,7 @@ public abstract class AbstractGame implements ApplicationListener {
 	public void setSoftKeyboardEventInterface(SoftKeyboardEventInterface softKeyboardEventInterface) {
 		this.softKeyboardEventInterface = softKeyboardEventInterface;
 		this.softKeyboardEventInterface.setSoftKeyboardEventListener(keyboardManager);
+        keyboardManager.setKeyboardEventService(this.softKeyboardEventInterface);
 	}
 }
 
