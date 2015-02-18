@@ -285,7 +285,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 lastTouchDragTime = System.currentTimeMillis();
                 Stage stage = getStage();
                 if (stage != null) {
-                    stage.cancelTouchFocus(this, ListWidget.this);
+                    stage.cancelTouchFocus(ListWidget.this);
                 }
 
             }
