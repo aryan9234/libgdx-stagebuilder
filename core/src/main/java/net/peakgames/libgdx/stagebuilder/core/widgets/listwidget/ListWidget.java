@@ -3,7 +3,6 @@ package net.peakgames.libgdx.stagebuilder.core.widgets.listwidget;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -285,7 +284,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 lastTouchDragTime = System.currentTimeMillis();
                 Stage stage = getStage();
                 if (stage != null) {
-                    stage.cancelTouchFocus(ListWidget.this);
+                    stage.cancelTouchFocusExcept(this, ListWidget.this);
                 }
 
             }
