@@ -169,6 +169,23 @@ public abstract class AbstractGame implements ApplicationListener {
         }
     }
 
+    public void backToPreviousScreenWithReplaceParams(Map<String, String> parameters){
+        try {
+            unloadAssets();
+            Screen top = screens.pop();
+            top.hide();
+            top.dispose();
+            this.topScreen = getTopScreen();
+            if(topScreen instanceof AbstractScreen){
+                ((AbstractScreen) topScreen).setParameters(parameters);
+            }
+            displayTopScreen();
+
+        } catch (EmptyStackException e) {
+            Gdx.app.log(TAG, "Can not switch to previous screen. ", e);
+        }
+    }
+
     private void addParameters(Map<String, String> params, AbstractScreen screen){
         if(params != null){
             if(screen.parameters != null){
