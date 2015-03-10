@@ -1,9 +1,6 @@
 package net.peakgames.libgdx.stagebuilder.core;
 
-import java.util.EmptyStackException;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 import net.peakgames.libgdx.stagebuilder.core.assets.Assets;
 import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
@@ -160,24 +157,7 @@ public abstract class AbstractGame implements ApplicationListener {
             top.dispose();
             this.topScreen = getTopScreen();
             if(topScreen instanceof AbstractScreen){
-                addParameters(parameters,(AbstractScreen)topScreen);
-            }
-            displayTopScreen();
-
-        } catch (EmptyStackException e) {
-            Gdx.app.log(TAG, "Can not switch to previous screen. ", e);
-        }
-    }
-
-    public void backToPreviousScreenWithReplaceParams(Map<String, String> parameters){
-        try {
-            unloadAssets();
-            Screen top = screens.pop();
-            top.hide();
-            top.dispose();
-            this.topScreen = getTopScreen();
-            if(topScreen instanceof AbstractScreen){
-                ((AbstractScreen) topScreen).setParameters(parameters);
+                addParameters(parameters, (AbstractScreen) topScreen);
             }
             displayTopScreen();
 
@@ -188,10 +168,11 @@ public abstract class AbstractGame implements ApplicationListener {
 
     private void addParameters(Map<String, String> params, AbstractScreen screen){
         if(params != null){
-            if(screen.parameters != null){
-                params.putAll(screen.parameters);
+            if(screen.parameters != null && screen.parameters instanceof HashMap){
+                ((HashMap)screen.parameters).putAll(params);
+            } else {
+                screen.setParameters(params);
             }
-            screen.setParameters(params);
         }
     }
 
@@ -230,6 +211,14 @@ public abstract class AbstractGame implements ApplicationListener {
         } catch (EmptyStackException e) {
             return new NullScreen();
         }
+    }
+
+    public Screen getPreviousScreen() {
+        if (screens.size() > 1) {
+            return screens.get(screens.size()-2);
+        }
+
+        return null;
     }
 
     public int getNumberScreens() {
