@@ -167,7 +167,7 @@ public abstract class AbstractGame implements ApplicationListener {
     }
 
     private void addParameters(Map<String, String> params, AbstractScreen screen){
-        if(params != null){
+        if(params != null && !params.isEmpty()){
             Map<String, String> mergedMap = new HashMap<String, String>();
             if (screen.parameters != null && !screen.parameters.isEmpty()) {
                 mergedMap.putAll(screen.parameters);

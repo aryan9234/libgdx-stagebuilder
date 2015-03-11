@@ -62,7 +62,11 @@
 			<version>2.1.2</version>
 			<scope>provided</scope>
 		</dependency>
-
+        <dependency>
+            <groupId>com.binarytweed</groupId>
+            <artifactId>quarantining-test-runner</artifactId>
+            <version>0.0.1</version>
+        </dependency>
 	</dependencies>
 
 	<build>
