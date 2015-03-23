@@ -4,7 +4,6 @@ import com.badlogic.gdx.files.FileHandle;
 
 import net.peakgames.libgdx.stagebuilder.core.model.*;
 
-import net.peakgames.libgdx.stagebuilder.core.widgets.ToggleWidget;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.InputStream;
@@ -180,6 +179,14 @@ public class XmlModelBuilder {
         selectBoxModel.setMaxTextWidth(XmlHelper.readIntAttribute(xmlParser, "maxTextWidth", 0));
         selectBoxModel.setHorizontalScrollDisabled(XmlHelper.readBooleanAttribute(xmlParser, "horizontalScrollDisabled", false));
         selectBoxModel.setVerticalScrollDisabled(XmlHelper.readBooleanAttribute(xmlParser, "verticalScrollDisabled", false));
+        selectBoxModel.setBackgroundNinePatchSizeLeft(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeLeft", 0));
+        selectBoxModel.setBackgroundNinePatchSizeRight(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeRight", 0));
+        selectBoxModel.setBackgroundNinePatchSizeTop(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeTop", 0));
+        selectBoxModel.setBackgroundNinePatchSizeBottom(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeBottom", 0));
+        selectBoxModel.setSelectionBackgroundNinePatchSizeLeft(XmlHelper.readIntAttribute(xmlParser, "selectionBgPatchSizeLeft", 0));
+        selectBoxModel.setSelectionBackgroundNinePatchSizeRight(XmlHelper.readIntAttribute(xmlParser, "selectionBgPatchSizeRight", 0));
+        selectBoxModel.setSelectionBackgroundNinePatchSizeTop(XmlHelper.readIntAttribute(xmlParser, "selectionBgPatchSizeTop", 0));
+        selectBoxModel.setSelectionBackgroundNinePatchSizeBottom(XmlHelper.readIntAttribute(xmlParser, "selectionBgPatchSizeBottom", 0));
         return selectBoxModel;
     }
 
