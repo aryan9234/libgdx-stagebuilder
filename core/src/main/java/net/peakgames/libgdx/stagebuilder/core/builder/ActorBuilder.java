@@ -244,7 +244,7 @@ public abstract class ActorBuilder {
         int positionMultipliedPatchSize = (int) Math.ceil(resolutionHelper.getPositionMultiplier() * originalPatchSize);
         int calculatedValue = Math.min(positionMultipliedPatchSize, limit);
 
-        return Math.max(2, calculatedValue);
+        return Math.max(1, calculatedValue);
     }
 
 
