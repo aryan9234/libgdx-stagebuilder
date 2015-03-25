@@ -14,6 +14,17 @@ public class SelectBoxModel extends BaseModel {
     private String selection;
     private String selectionBackground;
 
+
+    private int backgroundNinePatchSizeLeft;
+    private int backgroundNinePatchSizeRight;
+    private int backgroundNinePatchSizeTop;
+    private int backgroundNinePatchSizeBottom;
+
+    private int selectionBackgroundNinePatchSizeLeft;
+    private int selectionBackgroundNinePatchSizeRight;
+    private int selectionBackgroundNinePatchSizeTop;
+    private int selectionBackgroundNinePatchSizeBottom;
+
     private boolean horizontalScrollDisabled;
     private boolean verticalScrollDisabled;
 
@@ -149,4 +160,70 @@ public class SelectBoxModel extends BaseModel {
     public void setHorizontalScrollDisabled(boolean horizontalScrollDisabled) {
         this.horizontalScrollDisabled = horizontalScrollDisabled;
     }
+
+    public int getSelectionBackgroundNinePatchSizeLeft() {
+        return selectionBackgroundNinePatchSizeLeft;
+    }
+
+    public void setSelectionBackgroundNinePatchSizeLeft(int selectionBackgroundNinePatchSizeLeft) {
+        this.selectionBackgroundNinePatchSizeLeft = selectionBackgroundNinePatchSizeLeft;
+    }
+
+    public int getSelectionBackgroundNinePatchSizeRight() {
+        return selectionBackgroundNinePatchSizeRight;
+    }
+
+    public void setSelectionBackgroundNinePatchSizeRight(int selectionBackgroundNinePatchSizeRight) {
+        this.selectionBackgroundNinePatchSizeRight = selectionBackgroundNinePatchSizeRight;
+    }
+
+    public int getSelectionBackgroundNinePatchSizeTop() {
+        return selectionBackgroundNinePatchSizeTop;
+    }
+
+    public void setSelectionBackgroundNinePatchSizeTop(int selectionBackgroundNinePatchSizeTop) {
+        this.selectionBackgroundNinePatchSizeTop = selectionBackgroundNinePatchSizeTop;
+    }
+
+    public int getSelectionBackgroundNinePatchSizeBottom() {
+        return selectionBackgroundNinePatchSizeBottom;
+    }
+
+    public void setSelectionBackgroundNinePatchSizeBottom(int selectionBackgroundNinePatchSizeBottom) {
+        this.selectionBackgroundNinePatchSizeBottom = selectionBackgroundNinePatchSizeBottom;
+    }
+
+
+    public int getBackgroundNinePatchSizeLeft() {
+        return backgroundNinePatchSizeLeft;
+    }
+
+    public void setBackgroundNinePatchSizeLeft(int backgroundNinePatchSizeLeft) {
+        this.backgroundNinePatchSizeLeft = backgroundNinePatchSizeLeft;
+    }
+
+    public int getBackgroundNinePatchSizeRight() {
+        return backgroundNinePatchSizeRight;
+    }
+
+    public void setBackgroundNinePatchSizeRight(int backgroundNinePatchSizeRight) {
+        this.backgroundNinePatchSizeRight = backgroundNinePatchSizeRight;
+    }
+
+    public int getBackgroundNinePatchSizeTop() {
+        return backgroundNinePatchSizeTop;
+    }
+
+    public void setBackgroundNinePatchSizeTop(int backgroundNinePatchSizeTop) {
+        this.backgroundNinePatchSizeTop = backgroundNinePatchSizeTop;
+    }
+
+    public int getBackgroundNinePatchSizeBottom() {
+        return backgroundNinePatchSizeBottom;
+    }
+
+    public void setBackgroundNinePatchSizeBottom(int backgroundNinePatchSizeBottom) {
+        this.backgroundNinePatchSizeBottom = backgroundNinePatchSizeBottom;
+    }
+
 }

@@ -2,7 +2,10 @@ package net.peakgames.libgdx.stagebuilder.core.builder;
 
 import java.util.Comparator;
 
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
 import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
 import net.peakgames.libgdx.stagebuilder.core.model.BaseModel;
@@ -214,6 +217,43 @@ public abstract class ActorBuilder {
         } else {
             model.setHeight(height * resolutionHelper.getPositionMultiplier());
         }
+    }
+
+    protected NinePatchDrawable convertTextureRegionToNinePatchDrawable(TextureRegion textureRegion, int patchSizeLeft, int patchSizeRight, int patchSizeTop, int patchSizeBottom) {
+        int limitPatchWidth = getNinePatchLimitForWidth(textureRegion);
+        int limitPatchHeight = getNinePatchLimitForHeight(textureRegion);
+
+        return new NinePatchDrawable
+        (
+            new NinePatch
+            (
+                textureRegion,
+                calculateNinePatchSize(patchSizeLeft, limitPatchWidth),
+                calculateNinePatchSize(patchSizeRight, limitPatchWidth),
+                calculateNinePatchSize(patchSizeTop, limitPatchHeight),
+                calculateNinePatchSize(patchSizeBottom, limitPatchHeight)
+            )
+        );
+    }
+
+    protected int calculateNinePatchSize(int originalPatchSize, int limit) {
+        if (originalPatchSize <= 0) {
+            return 0;
+        }
+
+        int positionMultipliedPatchSize = (int) Math.ceil(resolutionHelper.getPositionMultiplier() * originalPatchSize);
+        int calculatedValue = Math.min(positionMultipliedPatchSize, limit);
+
+        return Math.max(1, calculatedValue);
+    }
+
+
+    protected int getNinePatchLimitForWidth(TextureRegion textureRegion) {
+        return textureRegion.getRegionWidth() / 2 - 1;
+    }
+
+    protected int getNinePatchLimitForHeight(TextureRegion textureRegion) {
+        return textureRegion.getRegionHeight() / 2 - 1;
     }
 
     public String getLocalizedString(String s) {
