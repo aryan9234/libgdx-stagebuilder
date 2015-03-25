@@ -230,12 +230,17 @@ public class XmlModelBuilder {
     private BaseModel buildTextFieldModel(XmlPullParser xmlParser) {
     	TextFieldModel textFieldModel = new TextFieldModel();
     	setBaseModelParameters(textFieldModel, xmlParser);
-    	textFieldModel.setAtlasName( XmlHelper.readStringAttribute( xmlParser, "atlas"));
+    	textFieldModel.setAtlasName(XmlHelper.readStringAttribute(xmlParser, "atlas"));
     	textFieldModel.setText(XmlHelper.readStringAttribute(xmlParser, "text"));
     	textFieldModel.setBackgroundImageName(XmlHelper.readStringAttribute(xmlParser, "backgroundImage"));
     	textFieldModel.setSelectionImageName(XmlHelper.readStringAttribute(xmlParser, "selectionImage"));
     	textFieldModel.setCursorImageName(XmlHelper.readStringAttribute(xmlParser, "cursorImage"));
-    	textFieldModel.setBackGroundOffset(XmlHelper.readIntAttribute(xmlParser, "backgroundOffset", 0));
+        textFieldModel.setBackgroundUsingPatchSize(XmlHelper.readBooleanAttribute(xmlParser, "bgUsingPatchSize", false));
+        textFieldModel.setBackgroundOffset(XmlHelper.readIntAttribute(xmlParser, "backgroundOffset", 0));
+        textFieldModel.setBackgroundPatchSizeLeft(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeLeft", 0));
+        textFieldModel.setBackgroundPatchSizeRight(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeRight", 0));
+        textFieldModel.setBackgroundPatchSizeTop(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeTop", 0));
+        textFieldModel.setBackgroundPatchSizeBottom(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeBottom", 0));
     	textFieldModel.setSelectionOffset(XmlHelper.readIntAttribute(xmlParser, "selectionOffset", 0));
     	textFieldModel.setCursorOffset(XmlHelper.readIntAttribute(xmlParser, "cursorOffset", 0));
     	textFieldModel.setFontName(XmlHelper.readStringAttribute(xmlParser, "fontName"));
@@ -249,12 +254,17 @@ public class XmlModelBuilder {
     private BaseModel buildTextAreaModel(XmlPullParser xmlParser) {
         TextAreaModel textAreaModel = new TextAreaModel();
         setBaseModelParameters(textAreaModel, xmlParser);
-        textAreaModel.setAtlasName( XmlHelper.readStringAttribute( xmlParser, "atlas"));
+        textAreaModel.setAtlasName(XmlHelper.readStringAttribute(xmlParser, "atlas"));
         textAreaModel.setText(XmlHelper.readStringAttribute(xmlParser, "text"));
         textAreaModel.setBackgroundImageName(XmlHelper.readStringAttribute(xmlParser, "backgroundImage"));
         textAreaModel.setSelectionImageName(XmlHelper.readStringAttribute(xmlParser, "selectionImage"));
         textAreaModel.setCursorImageName(XmlHelper.readStringAttribute(xmlParser, "cursorImage"));
-        textAreaModel.setBackGroundOffset(XmlHelper.readIntAttribute(xmlParser, "backgroundOffset", 0));
+        textAreaModel.setBackgroundUsingPatchSize(XmlHelper.readBooleanAttribute(xmlParser, "bgUsingPatchSize", false));
+        textAreaModel.setBackgroundOffset(XmlHelper.readIntAttribute(xmlParser, "backgroundOffset", 0));
+        textAreaModel.setBackgroundPatchSizeLeft(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeLeft", 0));
+        textAreaModel.setBackgroundPatchSizeRight(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeRight", 0));
+        textAreaModel.setBackgroundPatchSizeTop(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeTop", 0));
+        textAreaModel.setBackgroundPatchSizeBottom(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeBottom", 0));
         textAreaModel.setSelectionOffset(XmlHelper.readIntAttribute(xmlParser, "selectionOffset", 0));
         textAreaModel.setCursorOffset(XmlHelper.readIntAttribute(xmlParser, "cursorOffset", 0));
         textAreaModel.setFontName(XmlHelper.readStringAttribute(xmlParser, "fontName"));

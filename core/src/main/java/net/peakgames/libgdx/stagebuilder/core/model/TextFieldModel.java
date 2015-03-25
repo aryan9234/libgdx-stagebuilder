@@ -8,7 +8,13 @@ public class TextFieldModel extends ButtonModel {
 	private String cursorImageName;
 	private String selectionImageName;
 	private String backgroundImageName;
-	private int backGroundOffset;
+    private boolean backgroundUsingPatchSize;
+    private int backgroundOffset;
+    private int backgroundPatchSizeLeft;
+    private int backgroundPatchSizeRight;
+    private int backgroundPatchSizeTop;
+    private int backgroundPatchSizeBottom;
+
 	private int cursorOffset;
 	private int selectionOffset;
 	private boolean password;
@@ -64,13 +70,53 @@ public class TextFieldModel extends ButtonModel {
 		this.backgroundImageName = backgroundImageName;
 	}
 
-	public int getBackGroundOffset() {
-		return backGroundOffset;
+    public boolean isBackgroundUsingPatchSize() {
+        return backgroundUsingPatchSize;
+    }
+
+    public void setBackgroundUsingPatchSize(boolean backgroundUsingPatchSize) {
+        this.backgroundUsingPatchSize = backgroundUsingPatchSize;
+    }
+
+    public int getBackgroundOffset() {
+		return backgroundOffset;
 	}
 
-	public void setBackGroundOffset(int backGroundOffset) {
-		this.backGroundOffset = backGroundOffset;
+	public void setBackgroundOffset(int backGroundOffset) {
+		this.backgroundOffset = backGroundOffset;
 	}
+
+    public int getBackgroundPatchSizeBottom() {
+        return backgroundPatchSizeBottom;
+    }
+
+    public void setBackgroundPatchSizeBottom(int backgroundPatchSizeBottom) {
+        this.backgroundPatchSizeBottom = backgroundPatchSizeBottom;
+    }
+
+    public int getBackgroundPatchSizeLeft() {
+        return backgroundPatchSizeLeft;
+    }
+
+    public void setBackgroundPatchSizeLeft(int backgroundPatchSizeLeft) {
+        this.backgroundPatchSizeLeft = backgroundPatchSizeLeft;
+    }
+
+    public int getBackgroundPatchSizeRight() {
+        return backgroundPatchSizeRight;
+    }
+
+    public void setBackgroundPatchSizeRight(int backgroundPatchSizeRight) {
+        this.backgroundPatchSizeRight = backgroundPatchSizeRight;
+    }
+
+    public int getBackgroundPatchSizeTop() {
+        return backgroundPatchSizeTop;
+    }
+
+    public void setBackgroundPatchSizeTop(int backgroundPatchSizeTop) {
+        this.backgroundPatchSizeTop = backgroundPatchSizeTop;
+    }
 
 	public int getCursorOffset() {
 		return cursorOffset;

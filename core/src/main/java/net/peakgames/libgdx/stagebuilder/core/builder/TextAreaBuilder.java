@@ -31,14 +31,40 @@ public class TextAreaBuilder extends ActorBuilder{
         Color fontColor = Color.valueOf(textAreaModel.getFontColor());
         
         TextureAtlas textureAtlas = assets.getTextureAtlas(textAreaModel.getAtlasName());
-        
-        NinePatchDrawable cursor = createNinePatchDrawable(textAreaModel.getCursorImageName(), textureAtlas, textAreaModel.getCursorOffset());
+
+        NinePatchDrawable cursor = convertTextureRegionToNinePatchDrawable(
+                textureAtlas.findRegion(textAreaModel.getCursorImageName()),
+                textAreaModel.getCursorOffset(),
+                textAreaModel.getCursorOffset(),
+                textAreaModel.getCursorOffset(),
+                textAreaModel.getCursorOffset());
         cursor.getPatch().setColor(fontColor);
-        NinePatchDrawable selection = createNinePatchDrawable(textAreaModel.getSelectionImageName(), textureAtlas, textAreaModel.getSelectionOffset());
+
+        NinePatchDrawable selection = convertTextureRegionToNinePatchDrawable(
+                textureAtlas.findRegion(textAreaModel.getSelectionImageName()),
+                textAreaModel.getSelectionOffset(),
+                textAreaModel.getSelectionOffset(),
+                textAreaModel.getSelectionOffset(),
+                textAreaModel.getSelectionOffset());
+
         NinePatchDrawable background = null;
 
         if(textAreaModel.getBackgroundImageName() != null){
-            background = createNinePatchDrawable(textAreaModel.getBackgroundImageName(), textureAtlas, textAreaModel.getBackGroundOffset());
+            if (textAreaModel.isBackgroundUsingPatchSize()) {
+                background = convertTextureRegionToNinePatchDrawable(
+                        textureAtlas.findRegion(textAreaModel.getBackgroundImageName()),
+                        textAreaModel.getBackgroundPatchSizeLeft(),
+                        textAreaModel.getBackgroundPatchSizeRight(),
+                        textAreaModel.getBackgroundPatchSizeTop(),
+                        textAreaModel.getBackgroundPatchSizeBottom());
+            } else {
+                background = convertTextureRegionToNinePatchDrawable(
+                        textureAtlas.findRegion(textAreaModel.getBackgroundImageName()),
+                        textAreaModel.getBackgroundOffset(),
+                        textAreaModel.getBackgroundOffset(),
+                        textAreaModel.getBackgroundOffset(),
+                        textAreaModel.getBackgroundOffset());
+            }
             background.setLeftWidth(textAreaModel.getPadding());
             background.setRightWidth(textAreaModel.getPadding());
             background.setBottomHeight(textAreaModel.getPadding());
@@ -61,12 +87,5 @@ public class TextAreaBuilder extends ActorBuilder{
         float sizeMultiplier = resolutionHelper.getSizeMultiplier();
         textureRegionDrawable.setMinWidth( textureRegionDrawable.getMinWidth() * sizeMultiplier);
         textureRegionDrawable.setMinHeight( textureRegionDrawable.getMinHeight() * sizeMultiplier);
-    }
-    
-    private NinePatchDrawable createNinePatchDrawable(String imageName, TextureAtlas textureAtlas ,int patchOffset) {
-    	 NinePatchDrawable ninePatchDrawable = new NinePatchDrawable();
-         NinePatch patch = new NinePatch(textureAtlas.findRegion(imageName), patchOffset, patchOffset, patchOffset, patchOffset);
-         ninePatchDrawable.setPatch(patch);
-         return ninePatchDrawable;
     }
 }

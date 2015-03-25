@@ -30,14 +30,41 @@ public class TextFieldBuilder extends ActorBuilder{
         Color fontColor = Color.valueOf(textFieldModel.getFontColor());
         
         TextureAtlas textureAtlas = assets.getTextureAtlas(textFieldModel.getAtlasName());
-        
-        NinePatchDrawable cursor = createNinePatchDrawable(textFieldModel.getCursorImageName(), textureAtlas, textFieldModel.getCursorOffset());
+
+        NinePatchDrawable cursor = convertTextureRegionToNinePatchDrawable(
+                textureAtlas.findRegion(textFieldModel.getCursorImageName()),
+                textFieldModel.getCursorOffset(),
+                textFieldModel.getCursorOffset(),
+                textFieldModel.getCursorOffset(),
+                textFieldModel.getCursorOffset());
         cursor.getPatch().setColor(fontColor);
-        NinePatchDrawable selection = createNinePatchDrawable(textFieldModel.getSelectionImageName(), textureAtlas, textFieldModel.getSelectionOffset());
+
+        NinePatchDrawable selection = convertTextureRegionToNinePatchDrawable(
+                textureAtlas.findRegion(textFieldModel.getSelectionImageName()),
+                textFieldModel.getSelectionOffset(),
+                textFieldModel.getSelectionOffset(),
+                textFieldModel.getSelectionOffset(),
+                textFieldModel.getSelectionOffset());
+
         NinePatchDrawable background = null;
 
-        if(textFieldModel.getBackgroundImageName() != null){
-            background = createNinePatchDrawable(textFieldModel.getBackgroundImageName(), textureAtlas, textFieldModel.getBackGroundOffset());
+        if(textFieldModel.getBackgroundImageName() != null) {
+            if (textFieldModel.isBackgroundUsingPatchSize()) {
+                background = convertTextureRegionToNinePatchDrawable(
+                        textureAtlas.findRegion(textFieldModel.getBackgroundImageName()),
+                        textFieldModel.getBackgroundPatchSizeLeft(),
+                        textFieldModel.getBackgroundPatchSizeRight(),
+                        textFieldModel.getBackgroundPatchSizeTop(),
+                        textFieldModel.getBackgroundPatchSizeBottom());
+            } else {
+                background = convertTextureRegionToNinePatchDrawable(
+                        textureAtlas.findRegion(textFieldModel.getBackgroundImageName()),
+                        textFieldModel.getBackgroundOffset(),
+                        textFieldModel.getBackgroundOffset(),
+                        textFieldModel.getBackgroundOffset(),
+                        textFieldModel.getBackgroundOffset());
+            }
+
             background.setLeftWidth(textFieldModel.getPadding());
             background.setRightWidth(textFieldModel.getPadding());
             background.setBottomHeight(textFieldModel.getPadding());
@@ -59,29 +86,5 @@ public class TextFieldBuilder extends ActorBuilder{
         float sizeMultiplier = resolutionHelper.getSizeMultiplier();
         textureRegionDrawable.setMinWidth( textureRegionDrawable.getMinWidth() * sizeMultiplier);
         textureRegionDrawable.setMinHeight( textureRegionDrawable.getMinHeight() * sizeMultiplier);
-    }
-    
-    private NinePatchDrawable createNinePatchDrawable(String imageName, TextureAtlas textureAtlas ,int patchOffset) {
-        TextureAtlas.AtlasRegion region = textureAtlas.findRegion(imageName);
-        TextureRegionDrawable drawable = new TextureRegionDrawable(region);
-
-        int left = patchOffset;
-        int right = patchOffset;
-        int top = patchOffset;
-        int bottom = patchOffset;
-
-        if (left > drawable.getMinWidth() / 2f || right > drawable.getMinWidth() / 2f) {
-            left = (int) (drawable.getMinWidth() / 2f) - 2;
-            right = (int) (drawable.getMinWidth() / 2f) - 2;
-        }
-        if (top > drawable.getMinHeight() / 2f || bottom > drawable.getMinHeight() / 2f) {
-            top = (int) (drawable.getMinHeight() / 2f) - 2;
-            bottom = (int) (drawable.getMinHeight() / 2f) - 2;
-        }
-
-        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable();
-        NinePatch patch = new NinePatch(region, left, right, top, bottom);
-        ninePatchDrawable.setPatch(patch);
-        return ninePatchDrawable;
     }
 }
