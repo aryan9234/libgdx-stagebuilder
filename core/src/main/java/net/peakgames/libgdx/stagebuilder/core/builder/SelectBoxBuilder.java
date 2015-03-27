@@ -21,6 +21,8 @@ public class SelectBoxBuilder extends ActorBuilder {
     public static final String DELIMITER = ";";
     public static int DEFAULT_PADDING_LEFT = 5;
     public static int DEFAULT_PADDING_RIGHT = 5;
+    public static int DEFAULT_PADDING_TOP = 5;
+    public static int DEFAULT_PADDING_BOTTOM = 5;
 
     public SelectBoxBuilder(AssetsInterface assets, ResolutionHelper resolutionHelper, LocalizationService localizationService) {
         super(assets, resolutionHelper, localizationService);
@@ -34,6 +36,8 @@ public class SelectBoxBuilder extends ActorBuilder {
         SelectBoxModel selectBoxModel = (SelectBoxModel)model;
         selectBoxModel.setPaddingLeft((int) (selectBoxModel.getPaddingLeft() * positionMultiplier));
         selectBoxModel.setPaddingRight((int) (selectBoxModel.getPaddingRight() * positionMultiplier));
+        selectBoxModel.setPaddingTop((int) (selectBoxModel.getPaddingTop() * positionMultiplier));
+        selectBoxModel.setPaddingBottom((int) (selectBoxModel.getPaddingBottom() * positionMultiplier));
 
         TextureAtlas textureAtlas = assets.getTextureAtlas(selectBoxModel.getAtlasName());
 
@@ -65,15 +69,16 @@ public class SelectBoxBuilder extends ActorBuilder {
 
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle(backgroundDrawable, hScroll, hScrollKnob, vScroll, vScrollKnob);
 
+
         BitmapFont font = assets.getFont(selectBoxModel.getFontName());
         Color fontColor = selectBoxModel.getFontColor()==null ? DEFAULT_COLOR : Color.valueOf(selectBoxModel.getFontColor());
         Color fontColorSelected = selectBoxModel.getFontColorSelected()==null ? DEFAULT_COLOR : Color.valueOf(selectBoxModel.getFontColorSelected());
         Color fontColorUnselected = selectBoxModel.getFontColorUnselected()==null ? DEFAULT_COLOR : Color.valueOf(selectBoxModel.getFontColorUnselected());
 
-        selection.setLeftWidth(selectBoxModel.getPaddingLeft()==0 ? DEFAULT_PADDING_LEFT : selectBoxModel.getPaddingLeft());
-        selection.setRightWidth(selectBoxModel.getPaddingRight() == 0 ? DEFAULT_PADDING_RIGHT : selectBoxModel.getPaddingRight());
-        selection.setTopHeight(5 * positionMultiplier);
-        selection.setBottomHeight(5 * positionMultiplier);
+        selection.setLeftWidth(selectBoxModel.getPaddingLeft()==0 ? DEFAULT_PADDING_LEFT * positionMultiplier : selectBoxModel.getPaddingLeft());
+        selection.setRightWidth(selectBoxModel.getPaddingRight() == 0 ? DEFAULT_PADDING_RIGHT * positionMultiplier : selectBoxModel.getPaddingRight());
+        selection.setTopHeight(selectBoxModel.getPaddingTop()==0 ? DEFAULT_PADDING_TOP * positionMultiplier : selectBoxModel.getPaddingTop());
+        selection.setBottomHeight(selectBoxModel.getPaddingBottom() == 0 ? DEFAULT_PADDING_BOTTOM * positionMultiplier : selectBoxModel.getPaddingBottom());
 
         String[] values = new String[0];
         String filterValues =  getLocalizedString(selectBoxModel.getValue());

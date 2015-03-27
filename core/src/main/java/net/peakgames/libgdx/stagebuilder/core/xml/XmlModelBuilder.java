@@ -175,6 +175,8 @@ public class XmlModelBuilder {
         selectBoxModel.setSelectionBackground(XmlHelper.readStringAttribute(xmlParser, "selectionBackground"));
         selectBoxModel.setPaddingLeft(XmlHelper.readIntAttribute(xmlParser, "paddingLeft", 1));
         selectBoxModel.setPaddingRight(XmlHelper.readIntAttribute(xmlParser, "paddingRight", 1));
+        selectBoxModel.setPaddingTop(XmlHelper.readIntAttribute(xmlParser, "paddingTop", 1));
+        selectBoxModel.setPaddingBottom(XmlHelper.readIntAttribute(xmlParser, "paddingBottom", 1));
         selectBoxModel.setPatchSize(XmlHelper.readIntAttribute(xmlParser, "patchSize", 1));
         selectBoxModel.setMaxTextWidth(XmlHelper.readIntAttribute(xmlParser, "maxTextWidth", 0));
         selectBoxModel.setHorizontalScrollDisabled(XmlHelper.readBooleanAttribute(xmlParser, "horizontalScrollDisabled", false));
