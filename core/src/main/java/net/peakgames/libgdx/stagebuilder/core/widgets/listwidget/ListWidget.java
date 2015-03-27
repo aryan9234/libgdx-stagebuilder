@@ -1,10 +1,13 @@
 package net.peakgames.libgdx.stagebuilder.core.widgets.listwidget;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.SnapshotArray;
@@ -27,6 +30,8 @@ import java.util.Map;
  */
 public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidgetDataSetChangeListener {
 
+    private static final int EMPTY_USER_OBJECT = -1;
+    private static final Actor EMPTY_ACTOR = new Actor(){{setUserObject(EMPTY_USER_OBJECT);}};
     private static final String TAG = "StageBuilder.ListWidget";
 
     public static final float DEFAULT_VELOCITY = 300f;
@@ -165,22 +170,24 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         if (hitActor == this) {
             return this;
         }
-        //child hit && check if child is %100 visible (not culled)
-        tmpVector.set(hitActor.getX(), hitActor.getY());
-        tmpVector = hitActor.localToStageCoordinates(tmpVector);
-        return (tmpVector.y > getY())  ? hitActor : null;
+
+        if(isNotTouchInBorders(y)) {
+            return null;
+        } else {
+            return hitActor;
+        }
     }
 
     private void handleDragUpBlocked() {
         Actor bottomActor = getBottomActor();
-        if (bottomActor != null && isDragging(System.currentTimeMillis())) {
+        if (isActorNotEmpty(bottomActor) && isDragging(System.currentTimeMillis())) {
             moveItems(DragDirection.UP, dragDistance * DEFAULT_BLOCKED_DRAG_MOVE_COEFFICIENT);
         }
     }
 
     private void handleDragDownBlocked() {
         Actor firstActor = getChildWithUserObject(0);
-        if (firstActor != null && isDragging(System.currentTimeMillis())) {
+        if (isActorNotEmpty(firstActor) && isDragging(System.currentTimeMillis())) {
             moveItems(DragDirection.DOWN, dragDistance * DEFAULT_BLOCKED_DRAG_MOVE_COEFFICIENT);
         }
     }
@@ -213,7 +220,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     private void handleSettleTop(float delta) {
         float moveUp = (delta * DEFAULT_VELOCITY);
         Actor firstItemActor = getChildWithUserObject(0);
-        if (firstItemActor != null) {
+        if (isActorNotEmpty(firstItemActor)) {
             if (getActorTopY(firstItemActor) + moveUp >= getHeight()) {
                 moveUp = getHeight() - getActorTopY(firstItemActor);
                 state = ListWidgetState.STEADY;
@@ -237,11 +244,18 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         needsLayout = true;
     }
 
+    private boolean isNotTouchInBorders(float y) {
+        return (y>getHeight() || y < 0);
+    }
+
     private class ListWidgetTouchListener extends InputListener {
         long touchDownTimestamp;
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            if(isNotTouchInBorders(y)) {
+                return false;
+            }
             touchDownY = y;
             lastDragPoint.set(x, y);
             touchDownTimestamp = System.currentTimeMillis();
@@ -255,6 +269,9 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 state = ListWidgetState.FLINGING;
                 flingTime = DEFAULT_FLING_TIME;
             }
+            if(Math.abs(touchDownY - y)>clickCancelDragThreshold) {
+                cancelTouchOnStage();
+            }
             touchDownY = 0;
 
             if (allActorsVisible) {
@@ -263,7 +280,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             }
 
             Actor firstItemActor = getChildWithUserObject(0);
-            if (firstItemActor != null) {
+            if (isActorNotEmpty(firstItemActor)) {
                 float moveUpY = getHeight() - getActorTopY(firstItemActor);
                 if (moveUpY > 0) {
                     state = ListWidgetState.SETTLE_TOP;
@@ -276,17 +293,20 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             }
         }
 
+        private void cancelTouchOnStage() {
+            Stage stage = getStage();
+            if (stage != null) {
+                stage.cancelTouchFocusExcept(this, ListWidget.this);
+            }
+        }
+
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
             DragDirection dragDirection = lastDragPoint.y > y ? DragDirection.DOWN : DragDirection.UP;
             dragDistance = lastDragPoint.y - y;
             if (Math.abs(dragDistance) > clickCancelDragThreshold) {
                 lastTouchDragTime = System.currentTimeMillis();
-                Stage stage = getStage();
-                if (stage != null) {
-                    stage.cancelTouchFocusExcept(this, ListWidget.this);
-                }
-
+                cancelTouchOnStage();
             }
 
             lastDragPoint.set(x, y);
@@ -327,7 +347,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     private boolean checkDragBlocked(DragDirection dragDirection) {
         if (dragDirection == DragDirection.DOWN) {
             Actor firstItemActor = getChildWithUserObject(0);
-            if (firstItemActor != null && firstItemActor.getY() + firstItemActor.getHeight() <= getHeight()) {
+            if (isActorNotEmpty(firstItemActor) && firstItemActor.getY() + firstItemActor.getHeight() <= getHeight()) {
                 //if first item, block dragging
                 return true;
             }
@@ -388,7 +408,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         recycledActors.clear();
         if (dragDirection == DragDirection.UP) {
             Actor topActor = getTopActor();
-            if (topActor == null) {
+            if (isActorEmpty(topActor)) {
                 return;
             }
             int actorIndex = getActorIndex(topActor);
@@ -419,11 +439,21 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         final Actor actor = listAdapter.getActor(listAdapterIndex, null);
         actor.setUserObject(listAdapterIndex);
         addActor(actor);
-        actor.setY(getHeight() - (listAdapterIndex + 1) * actor.getHeight());
+
+        float totalHeightOfUpperActors = actor.getHeight();
+        int itemIndex = 0;
+        for(Actor upperActor : getChildren()) {
+            if(itemIndex >= listAdapterIndex) {
+                break;
+            }
+            totalHeightOfUpperActors += upperActor.getHeight();
+            itemIndex++;
+        }
+
+        actor.setY(getHeight() - totalHeightOfUpperActors);
         actor.addListener(listItemClickListener);
         return actor;
     }
-
 
     /**
      * tum child actor'leri (list items) value kadar y ekseninde hareket ettirir.
@@ -440,7 +470,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
 
     private Actor getBottomActor() {
-        Actor bottomActor = null;
+        Actor bottomActor = EMPTY_ACTOR;
         float minY = Integer.MAX_VALUE;
         for (Actor actor : getChildren()) {
             if (actor.getY() < minY) {
@@ -452,7 +482,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
 
     private Actor getTopActor() {
-        Actor topActor = null;
+        Actor topActor = EMPTY_ACTOR;
         float maxY = 0;
         for (Actor actor : getChildren()) {
             if (actor.getY() > maxY) {
@@ -488,10 +518,18 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 }
             }
         }
-        return null;
+        return EMPTY_ACTOR;
     }
 
     private float getActorTopY(Actor actor) {
         return actor.getY() + actor.getHeight();
+    }
+
+    private boolean isActorNotEmpty(Actor actor) {
+        return actor != EMPTY_ACTOR;
+    }
+
+    private boolean isActorEmpty(Actor actor) {
+        return actor == EMPTY_ACTOR;
     }
 }

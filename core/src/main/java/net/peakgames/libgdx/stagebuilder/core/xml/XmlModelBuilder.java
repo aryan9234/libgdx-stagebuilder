@@ -249,6 +249,10 @@ public class XmlModelBuilder {
     	textFieldModel.setPasswordChar(XmlHelper.readStringAttribute(xmlParser, "passwordChar", "*"));
         textFieldModel.setHint(XmlHelper.readStringAttribute(xmlParser, "hint"));
         textFieldModel.setPadding(XmlHelper.readFloatAttribute(xmlParser, "padding", 0.0f));
+        textFieldModel.setLeftPadding(XmlHelper.readFloatAttribute(xmlParser, "leftPadding", 0.0f));
+        textFieldModel.setRightPadding(XmlHelper.readFloatAttribute(xmlParser, "rightPadding", 0.0f));
+        textFieldModel.setTopPadding(XmlHelper.readFloatAttribute(xmlParser, "topPadding", 0.0f));
+        textFieldModel.setBottomPadding(XmlHelper.readFloatAttribute(xmlParser, "bottomPadding", 0.0f));
     	return textFieldModel;
     }
     private BaseModel buildTextAreaModel(XmlPullParser xmlParser) {

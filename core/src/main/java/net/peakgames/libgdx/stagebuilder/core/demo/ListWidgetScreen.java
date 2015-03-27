@@ -53,7 +53,7 @@ public class ListWidgetScreen extends DemoScreen {
         final ListWidget complexListWidget = (ListWidget) findActor("complex_list_widget");
         final ComplextListAdapter complextListAdapter = new ComplextListAdapter(getStageBuilder());
 
-        List<ListItem> complexItemList = new ArrayList<ListItem>();
+        final List<ListItem> complexItemList = new ArrayList<ListItem>();
         for (int i = 0; i < 20; i++) {
             complexItemList.add(ListItem.generateRandom());
 
@@ -73,6 +73,14 @@ public class ListWidgetScreen extends DemoScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 complextListAdapter.removeTopActor();
+                complextListAdapter.notifyDataSetChanged();
+            }
+        });
+
+        findButton("removeAllComplexItemsButton").addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                complexItemList.clear();
                 complextListAdapter.notifyDataSetChanged();
             }
         });

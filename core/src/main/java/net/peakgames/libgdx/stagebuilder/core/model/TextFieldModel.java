@@ -21,6 +21,10 @@ public class TextFieldModel extends ButtonModel {
 	private String passwordChar = "*";
     private String hint;
     private float padding;
+	private float leftPadding;
+	private float rightPadding;
+	private float topPadding;
+	private float bottomPadding;
 
 	public String getText() {
 		return text;
@@ -165,4 +169,36 @@ public class TextFieldModel extends ButtonModel {
     public void setPadding(float padding) {
         this.padding = padding;
     }
+
+	public float getLeftPadding() {
+		return leftPadding;
+	}
+
+	public void setLeftPadding(float leftPadding) {
+		this.leftPadding = leftPadding;
+	}
+
+	public float getRightPadding() {
+		return rightPadding;
+	}
+
+	public void setRightPadding(float rightPadding) {
+		this.rightPadding = rightPadding;
+	}
+
+	public float getTopPadding() {
+		return topPadding;
+	}
+
+	public void setTopPadding(float topPadding) {
+		this.topPadding = topPadding;
+	}
+
+	public float getBottomPadding() {
+		return bottomPadding;
+	}
+
+	public void setBottomPadding(float bottomPadding) {
+		this.bottomPadding = bottomPadding;
+	}
 }
