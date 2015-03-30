@@ -13,7 +13,7 @@ import net.peakgames.libgdx.stagebuilder.core.widgets.listwidget.ListWidgetAdapt
 import java.util.HashMap;
 import java.util.Map;
 
-public class ComplextListAdapter extends ListWidgetAdapter {
+public class ComplextListAdapter extends ListWidgetAdapter<ListItem> {
 
     Map<String, Drawable> drawableCache = new HashMap<String, Drawable>();
 
@@ -39,13 +39,13 @@ public class ComplextListAdapter extends ListWidgetAdapter {
     }
 
     private void updateActor(final int position, Group group) {
-        Label nameLabel = (Label) group.findActor("name");
-        Label chipsLabel = (Label) group.findActor("chips");
-        ListItem item = (ListItem) items.get(position);
+        Label nameLabel = group.findActor("name");
+        Label chipsLabel = group.findActor("chips");
+        ListItem item = items.get(position);
         nameLabel.setText(item.getName());
         chipsLabel.setText(item.getChips() + "");
 
-        Image logo = (Image) group.findActor("logo");
+        Image logo = group.findActor("logo");
         Drawable drawable = drawableCache.get(item.getFrame());
         if (drawable == null) {
             TextureAtlas.AtlasRegion atlasRegion = stageBuilder.getAssets().getTextureAtlas("common.atlas").findRegion(item.getFrame());

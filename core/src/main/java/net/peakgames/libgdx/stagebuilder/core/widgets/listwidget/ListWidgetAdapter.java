@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * An abstract list widget adapter that uses list of items for populating list view.
  */
-public abstract class ListWidgetAdapter implements IListWidgetAdapter {
+public abstract class ListWidgetAdapter<T> implements IListWidgetAdapter<T> {
 
-    protected List<Object> items = Collections.EMPTY_LIST;
+    protected List<T> items = Collections.EMPTY_LIST;
     protected ListWidgetDataSetChangeListener dataSetChangeListener;
     protected StageBuilder stageBuilder;
 
@@ -20,7 +20,7 @@ public abstract class ListWidgetAdapter implements IListWidgetAdapter {
     }
 
     @Override
-    public void initialize(List items) {
+    public void initialize(List<T> items) {
         this.items = items;
     }
 
@@ -30,7 +30,7 @@ public abstract class ListWidgetAdapter implements IListWidgetAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public T getItem(int position) {
         return items.get(position);
     }
 
@@ -48,7 +48,7 @@ public abstract class ListWidgetAdapter implements IListWidgetAdapter {
     }
 
     @Override
-    public void addItem(Object item) {
+    public void addItem(T item) {
         this.items.add(item);
     }
 

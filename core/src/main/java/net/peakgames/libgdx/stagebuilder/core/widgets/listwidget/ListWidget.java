@@ -1,13 +1,10 @@
 package net.peakgames.libgdx.stagebuilder.core.widgets.listwidget;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.SnapshotArray;
@@ -32,7 +29,6 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
 
     private static final int EMPTY_USER_OBJECT = -1;
     private static final Actor EMPTY_ACTOR = new Actor(){{setUserObject(EMPTY_USER_OBJECT);}};
-    private static final String TAG = "StageBuilder.ListWidget";
 
     public static final float DEFAULT_VELOCITY = 300f;
     public static final float DEFAULT_FLING_TIME = 1f; // 1 second.
@@ -57,9 +53,6 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     private float dragDistance;
     private float clickCancelDragThreshold = 5f;
     private long lastTouchDragTime;
-
-    private Vector2 tmpVector = new Vector2();
-
 
     private OnItemClickedListener onItemClickedListener;
     private InputListener listItemClickListener = new ClickListener() {
@@ -131,7 +124,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             int count = listAdapter.getCount();
             for (int i = 0; i < count; i++) {
                 Actor actor = addActorToListWidget(i);
-                if (actor.getY() + actor.getHeight() < 0) {
+                if (actor.getY() < 0) {
                     allActorsVisible = false;
                     break;
                 }
