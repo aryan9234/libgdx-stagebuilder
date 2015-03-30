@@ -109,7 +109,9 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 	}
 
 	public void textFieldFocusChanged(final String actorName) {
-		keyboardEventService.focusChanged();
+        if (keyboardEventService != null) {
+            keyboardEventService.focusChanged();
+        }
 		focusedActorName = actorName;
 		if(isKeyboardOpen()) {
 			Actor focusedActor = stage.getRoot().findActor(focusedActorName);
