@@ -30,6 +30,8 @@ public class SelectBoxModel extends BaseModel {
 
     private int paddingLeft;
     private int paddingRight;
+    private int paddingTop;
+    private int paddingBottom;
     private int patchSize;
     private int maxTextWidth;
 
@@ -119,6 +121,22 @@ public class SelectBoxModel extends BaseModel {
 
     public void setPaddingRight(int paddingRight) {
         this.paddingRight = paddingRight;
+    }
+
+    public int getPaddingBottom() {
+        return paddingBottom;
+    }
+
+    public void setPaddingBottom(int paddingBottom) {
+        this.paddingBottom = paddingBottom;
+    }
+
+    public int getPaddingTop() {
+        return paddingTop;
+    }
+
+    public void setPaddingTop(int paddingTop) {
+        this.paddingTop = paddingTop;
     }
 
     public String getFontColorUnselected() {

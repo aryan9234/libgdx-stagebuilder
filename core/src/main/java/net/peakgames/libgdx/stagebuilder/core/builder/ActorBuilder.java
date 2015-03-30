@@ -249,11 +249,11 @@ public abstract class ActorBuilder {
 
 
     protected int getNinePatchLimitForWidth(TextureRegion textureRegion) {
-        return textureRegion.getRegionWidth() / 2 - 1;
+        return Math.max(1, textureRegion.getRegionWidth() / 2 - 1);
     }
 
     protected int getNinePatchLimitForHeight(TextureRegion textureRegion) {
-        return textureRegion.getRegionHeight() / 2 - 1;
+        return Math.max(1, textureRegion.getRegionHeight() / 2 - 1);
     }
 
     public String getLocalizedString(String s) {
