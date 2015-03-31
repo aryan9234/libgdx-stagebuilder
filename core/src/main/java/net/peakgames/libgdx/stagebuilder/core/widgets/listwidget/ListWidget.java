@@ -279,9 +279,9 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                     state = ListWidgetState.SETTLE_TOP;
                 }
             }
-            Actor lastActor = getBottomActor();
-            float moveDownY = lastActor.getY();
-            if (moveDownY > 0) {
+            Actor bottomActor = getBottomActor();
+            float moveDownY = bottomActor.getY();
+            if (isLastActor(bottomActor) && moveDownY > 0) {
                 state = ListWidgetState.SETTLE_BOTTOM;
             }
         }
@@ -327,6 +327,10 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 return 0f;
             }
         }
+    }
+
+    private boolean isLastActor(Actor actor) {
+        return getActorIndex(actor) == listAdapter.getCount() - 1;
     }
 
     private boolean isDragging(long now) {
