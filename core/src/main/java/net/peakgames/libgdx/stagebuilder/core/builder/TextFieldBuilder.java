@@ -1,20 +1,17 @@
 package net.peakgames.libgdx.stagebuilder.core.builder;
 
-import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
-import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
-import net.peakgames.libgdx.stagebuilder.core.model.BaseModel;
-import net.peakgames.libgdx.stagebuilder.core.model.TextFieldModel;
-import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
+import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
+import net.peakgames.libgdx.stagebuilder.core.model.BaseModel;
+import net.peakgames.libgdx.stagebuilder.core.model.TextFieldModel;
+import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
 
 public class TextFieldBuilder extends ActorBuilder{
 
@@ -65,10 +62,12 @@ public class TextFieldBuilder extends ActorBuilder{
                         textFieldModel.getBackgroundOffset());
             }
 
-            background.setLeftWidth(textFieldModel.getPadding());
-            background.setRightWidth(textFieldModel.getPadding());
-            background.setBottomHeight(textFieldModel.getPadding());
-            background.setTopHeight(textFieldModel.getPadding());
+			if(textFieldModel.getPadding() == 0) {
+                addPaddings(background, textFieldModel.getLeftPadding(), textFieldModel.getRightPadding(), textFieldModel.getBottomPadding(), textFieldModel.getTopPadding());
+            } else {
+                addPaddings(background, textFieldModel.getPadding());
+            }
+            
         }
         
         TextFieldStyle textFieldStyle = new TextFieldStyle(font, fontColor, cursor, selection, background);
@@ -82,9 +81,15 @@ public class TextFieldBuilder extends ActorBuilder{
         return textField;
     }
 
-    protected void updateDrawableSize( TextureRegionDrawable textureRegionDrawable){
-        float sizeMultiplier = resolutionHelper.getSizeMultiplier();
-        textureRegionDrawable.setMinWidth( textureRegionDrawable.getMinWidth() * sizeMultiplier);
-        textureRegionDrawable.setMinHeight( textureRegionDrawable.getMinHeight() * sizeMultiplier);
+    private void addPaddings(NinePatchDrawable ninePatchDrawable, float padding) {
+        addPaddings(ninePatchDrawable, padding, padding, padding, padding);
     }
+
+    private void addPaddings(NinePatchDrawable ninePatchDrawable, float left, float right, float bottom, float top) {
+        ninePatchDrawable.setLeftWidth(left * resolutionHelper.getPositionMultiplier());
+        ninePatchDrawable.setRightWidth(right * resolutionHelper.getPositionMultiplier());
+        ninePatchDrawable.setBottomHeight(bottom * resolutionHelper.getPositionMultiplier());
+        ninePatchDrawable.setTopHeight(top * resolutionHelper.getPositionMultiplier());
+    }
+
 }
