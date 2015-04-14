@@ -39,7 +39,12 @@ public abstract class ListWidgetAdapter<T> implements IListWidgetAdapter<T> {
 
     @Override
     public void notifyDataSetChanged() {
-        dataSetChangeListener.onListWidgetDataSetChanged();
+        dataSetChangeListener.onListWidgetDataSetChanged(false);
+    }
+
+    @Override
+    public void notifyDataSetChanged(boolean resetPosition) {
+        dataSetChangeListener.onListWidgetDataSetChanged(resetPosition);
     }
 
     @Override

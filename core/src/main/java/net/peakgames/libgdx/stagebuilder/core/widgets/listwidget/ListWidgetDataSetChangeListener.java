@@ -1,5 +1,5 @@
 package net.peakgames.libgdx.stagebuilder.core.widgets.listwidget;
 
 public interface ListWidgetDataSetChangeListener {
-    public void onListWidgetDataSetChanged();
+    public void onListWidgetDataSetChanged(boolean resetPosition);
 }

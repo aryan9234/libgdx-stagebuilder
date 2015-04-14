@@ -1,5 +1,6 @@
 package net.peakgames.libgdx.stagebuilder.core.widgets.listwidget;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -41,6 +42,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     private boolean drawDebug = false;
     private ShapeRenderer debugRenderer;
     private boolean needsLayout = false;
+    private boolean resetPosition = false;
     private final Vector2 lastDragPoint = new Vector2();
     private Vector2 gameAreaPosition;
     private boolean allActorsVisible = true;
@@ -119,16 +121,20 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     public void act(float delta) {
         super.act(delta);
         if (needsLayout) {
-            clearChildren();
-            allActorsVisible = true;
-            int count = listAdapter.getCount();
-            for (int i = 0; i < count; i++) {
-                Actor actor = addActorToListWidget(i);
-                if (actor.getY() < 0) {
-                    allActorsVisible = false;
-                    break;
-                }
+            if(resetPosition) {
+                state = ListWidgetState.STEADY;
             }
+            float topActorY = 0;
+            int topActorIndex = 0;
+            float topActorHeight = 0;
+            if(hasChildren()) {
+                Actor topActor = getTopActor();
+                topActorHeight = topActor.getHeight();
+                topActorY = topActor.getY();
+                topActorIndex = (Integer)topActor.getUserObject();
+            }
+            refreshActorList(topActorIndex);
+            retouchActorPositions(topActorY, topActorHeight);
             needsLayout = false;
         }
 
@@ -151,6 +157,35 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
 
             default:
                 break;
+        }
+    }
+
+    private void refreshActorList(int topActorIndex) {
+        clearChildren();
+        allActorsVisible = true;
+        int from = Math.min(topActorIndex, listAdapter.getCount());
+        int to = listAdapter.getCount();
+        if(resetPosition) {
+            from = 0;
+        }
+        int counter = 0;
+        for (int i = from; i < to; i++) {
+            Actor actor = addActorToListWidget(counter++, i);
+            if (actor.getY() < 0) {
+                allActorsVisible = false;
+                break;
+            }
+        }
+    }
+
+    private void retouchActorPositions(float topActorY, float topActorHeight) {
+        if(!resetPosition) {
+            if(topActorY != 0 && topActorHeight != 0) {
+                float yDiff = topActorHeight - (getHeight() - topActorY);
+                for(Actor actor : getChildren()) {
+                    actor.setY(actor.getY() + yDiff);
+                }
+            }
         }
     }
 
@@ -233,8 +268,9 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
 
     @Override
-    public void onListWidgetDataSetChanged() {
-        needsLayout = true;
+    public void onListWidgetDataSetChanged(boolean resetPosition) {
+        this.needsLayout = true;
+        this.resetPosition = resetPosition;
     }
 
     private boolean isNotTouchInBorders(float y) {
@@ -432,9 +468,9 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         }
     }
 
-    private Actor addActorToListWidget(final int listAdapterIndex) {
-        final Actor actor = listAdapter.getActor(listAdapterIndex, null);
-        actor.setUserObject(listAdapterIndex);
+    private Actor addActorToListWidget(final int listAdapterIndex, int actorIndex) {
+        final Actor actor = listAdapter.getActor(actorIndex, null);
+        actor.setUserObject(actorIndex);
         addActor(actor);
 
         float totalHeightOfUpperActors = actor.getHeight();
