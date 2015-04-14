@@ -121,7 +121,9 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     public void act(float delta) {
         super.act(delta);
         if (needsLayout) {
-            state = ListWidgetState.STEADY;
+            if(resetPosition) {
+                state = ListWidgetState.STEADY;
+            }
             float topActorY = 0;
             int topActorIndex = 0;
             float topActorHeight = 0;
