@@ -164,7 +164,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         clearChildren();
         allActorsVisible = true;
         int from = Math.min(topActorIndex, listAdapter.getCount());
-        int to = Math.min(topActorIndex + listAdapter.getCount(), listAdapter.getCount());
+        int to = listAdapter.getCount();
         if(resetPosition) {
             from = 0;
         }
