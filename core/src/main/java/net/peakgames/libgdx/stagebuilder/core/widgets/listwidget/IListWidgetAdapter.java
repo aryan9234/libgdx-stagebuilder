@@ -24,6 +24,8 @@ public interface IListWidgetAdapter<T> {
 
     void notifyDataSetChanged();
 
+    void notifyDataSetChanged(boolean resetPosition);
+
     void registerDataSetChangeListener(ListWidgetDataSetChangeListener listener);
 
     void actorRemoved(Actor actor);
