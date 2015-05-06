@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.util.Log;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -82,6 +83,9 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 	public void setListener(SoftKeyboardEventListener listener) {
 		this.listener = listener;
 	}
+	public void clearListener() {
+		setListener(null);
+	}
 
 	public boolean isKeyboardOpen() {
 		return keyboardOpen;
@@ -120,7 +124,7 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 	}
 
 	@Override
-	public void softKeyboardOpened(int keyboardHeight) {
+	public void softKeyboardOpened(final int keyboardHeight) {
 		this.keyboardOpen = true;
 		this.keyboardHeight = keyboardHeight;
 		if(focusedActorName == null) {
@@ -131,12 +135,17 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 			updateStagePosition(focusedActor);
 		} 
 		if(listener != null) {
-			listener.softKeyboardOpened(keyboardHeight);
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run() {
+					listener.softKeyboardOpened(keyboardHeight);
+				}
+			});
 		}
 	}
 
 	@Override
-	public void softKeyboardClosed(int keyboardHeight) {
+	public void softKeyboardClosed(final int keyboardHeight) {
 		this.keyboardOpen = false;
 		if(stage == null) {
 			return;
@@ -150,7 +159,12 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 		}
 		stage.setKeyboardFocus(null);
 		if(listener != null) {
-			listener.softKeyboardClosed(keyboardHeight);
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run() {
+					listener.softKeyboardClosed(keyboardHeight);
+				}
+			});
 		}
 	}
 
