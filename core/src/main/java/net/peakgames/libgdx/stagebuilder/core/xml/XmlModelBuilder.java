@@ -141,6 +141,8 @@ public class XmlModelBuilder {
         image.setNinepatchOffsetRight(XmlHelper.readIntAttribute(xmlParser, "npRight", 0));
         image.setNinepatchOffsetTop(XmlHelper.readIntAttribute(xmlParser, "npTop", 0));
         image.setNinepatchOffsetBottom(XmlHelper.readIntAttribute(xmlParser, "npBottom", 0));
+        image.setMinFilter(XmlHelper.readStringAttribute(xmlParser, "minFilter"));
+        image.setMagFilter(XmlHelper.readStringAttribute(xmlParser, "magFilter"));
         return image;
     }
 

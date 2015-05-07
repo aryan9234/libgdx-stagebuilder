@@ -21,6 +21,8 @@ public class ImageModel extends BaseModel {
     private int ninepatchOffsetTop;
     private int ninepatchOffsetBottom;
 
+    private String minFilter;
+    private String magFilter;
 
     public String getAtlasName() {
         return atlasName;
@@ -92,5 +94,21 @@ public class ImageModel extends BaseModel {
 
     public void setNinepatchOffsetBottom(int ninepatchOffsetBottom) {
         this.ninepatchOffsetBottom = ninepatchOffsetBottom;
+    }
+
+    public void setMinFilter(String minFilter) {
+        this.minFilter = minFilter;
+    }
+
+    public void setMagFilter(String magFilter) {
+        this.magFilter = magFilter;
+    }
+
+    public String getMinFilter() {
+        return minFilter;
+    }
+
+    public String getMagFilter() {
+        return magFilter;
     }
 }

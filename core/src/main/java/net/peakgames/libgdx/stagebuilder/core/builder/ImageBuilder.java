@@ -1,5 +1,6 @@
 package net.peakgames.libgdx.stagebuilder.core.builder;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -73,9 +74,15 @@ public class ImageBuilder extends ActorBuilder {
             }
 
             ninePatchDrawable.setPatch(patch);
+            if(imageModel.getMinFilter() != null && imageModel.getMagFilter() != null) {
+                patch.getTexture().setFilter(Texture.TextureFilter.valueOf(imageModel.getMinFilter()), Texture.TextureFilter.valueOf(imageModel.getMagFilter()));
+            }
             return new Image(patch);
         }else{
             TextureRegion textureRegion = new TextureRegion(assets.getTexture(getLocalizedString(imageModel.getTextureSrc())));
+            if(imageModel.getMinFilter() != null && imageModel.getMagFilter() != null) {
+                textureRegion.getTexture().setFilter(Texture.TextureFilter.valueOf(imageModel.getMinFilter()), Texture.TextureFilter.valueOf(imageModel.getMagFilter()));
+            }
             return new Image(textureRegion);
         }
     }
