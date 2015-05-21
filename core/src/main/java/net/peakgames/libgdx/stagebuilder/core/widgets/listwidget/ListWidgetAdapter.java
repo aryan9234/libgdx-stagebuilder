@@ -30,6 +30,11 @@ public abstract class ListWidgetAdapter<T> implements IListWidgetAdapter<T> {
     }
 
     @Override
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
+    @Override
     public T getItem(int position) {
         return items.get(position);
     }
