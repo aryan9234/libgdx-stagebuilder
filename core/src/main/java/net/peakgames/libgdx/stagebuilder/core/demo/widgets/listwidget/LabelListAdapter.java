@@ -34,9 +34,17 @@ public class LabelListAdapter extends ListWidgetAdapter<String> {
     }
 
     //For testing dynamic removal
-    public void removeTopActor(){
-        if(!this.items.isEmpty()){
-            this.items.remove(0);
+    public void removeTopActor() {
+        removeActorAt(0);
+    }
+
+    public void removeBottomActor() {
+        removeActorAt(this.items.size() - 1);
+    }
+
+    public void removeActorAt(int index) {
+        if (index >= 0 && index < items.size()) {
+            this.items.remove(index);
         }
     }
 }

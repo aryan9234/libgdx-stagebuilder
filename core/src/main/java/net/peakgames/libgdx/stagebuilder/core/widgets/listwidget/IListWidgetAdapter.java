@@ -10,6 +10,8 @@ public interface IListWidgetAdapter<T> {
 
     int getCount();
 
+    boolean isEmpty();
+
     T getItem(int position);
 
     void addItem(T item);

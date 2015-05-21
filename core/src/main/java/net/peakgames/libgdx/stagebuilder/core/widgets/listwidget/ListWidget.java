@@ -1,11 +1,13 @@
 package net.peakgames.libgdx.stagebuilder.core.widgets.listwidget;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.SnapshotArray;
@@ -135,6 +137,8 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             }
             refreshActorList(topActorIndex);
             retouchActorPositions(topActorY, topActorHeight);
+            settleIfNecessary();
+
             needsLayout = false;
         }
 
@@ -157,6 +161,22 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
 
             default:
                 break;
+        }
+    }
+
+    private void settleIfNecessary() {
+        if (!listAdapter.isEmpty()) {
+            Actor bottomActor = getBottomActor();
+            if (bottomActor.getUserObject().equals(listAdapter.getCount() - 1)) {
+                Actor topActor = getTopActor();
+                if (topActor.getUserObject().equals(0)) {
+                    state = ListWidgetState.SETTLE_TOP;
+                    refreshActorList(0);
+                } else if (bottomActor.getY() > 0) {
+                    state = ListWidgetState.SETTLE_BOTTOM;
+                    refreshActorList(((Integer) topActor.getUserObject()) - 1);
+                }
+            }
         }
     }
 

@@ -25,13 +25,23 @@ public class ListWidgetScreen extends DemoScreen {
         super.show();
 
         List<String> items = new ArrayList<String>();
-        for (int j = 1; j <= 5; j++) {
+        for (int j = 1; j <= 15; j++) {
             items.add("list_item " + j);
         }
         final LabelListAdapter listAdapter = new LabelListAdapter(getStageBuilder());
         listAdapter.initialize(items);
-        ListWidget labelListWidget = (ListWidget) findActor("label_list_widget");
+        final ListWidget labelListWidget = (ListWidget) findActor("label_list_widget");
         labelListWidget.setListAdapter(listAdapter);
+
+
+
+        labelListWidget.setOnItemClickListener(new OnItemClickedListener() {
+            @Override
+            public void onItemClicked(Object item, Actor view, int position) {
+                listAdapter.removeActorAt(position);
+                listAdapter.notifyDataSetChanged();
+            }
+        });
 
 
         findButton("addLabelItemButton").addListener(new ClickListener() {
@@ -46,6 +56,14 @@ public class ListWidgetScreen extends DemoScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listAdapter.removeTopActor();
+                listAdapter.notifyDataSetChanged();
+            }
+        });
+
+        findButton("removeLabelItemButtonFromBottom").addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                listAdapter.removeBottomActor();
                 listAdapter.notifyDataSetChanged();
             }
         });
