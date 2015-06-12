@@ -4,10 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.SnapshotArray;
@@ -31,7 +28,7 @@ import java.util.Map;
 public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidgetDataSetChangeListener {
 
     private static final int EMPTY_USER_OBJECT = -1;
-    private static final Actor EMPTY_ACTOR = new Actor(){{setUserObject(EMPTY_USER_OBJECT);}};
+    private static final Group EMPTY_ACTOR = new Group(){{setUserObject(EMPTY_USER_OBJECT);}};
 
     public static final float DEFAULT_VELOCITY = 300f;
     public static final float DEFAULT_FLING_TIME = 1f; // 1 second.
