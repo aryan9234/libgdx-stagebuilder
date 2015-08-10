@@ -133,11 +133,17 @@ public abstract class AbstractGame implements ApplicationListener {
 
     public void replaceTopScreen(Screen screen) {
         validateScreen(screen);
-        getTopScreen().hide();
-        screens.pop();
-        screens.push(screen);
-        this.topScreen = getTopScreen();
-        displayTopScreen();
+        if(screens.isEmpty()) {
+            setScreen(screen);
+        } else {
+            Screen topScreen = getTopScreen();
+            topScreen.hide();
+            topScreen.dispose();
+            screens.pop();
+            screens.push(screen);
+            this.topScreen = getTopScreen();
+            displayTopScreen();
+        }
     }
 
     public void replaceTopScreen(Screen screen, Map<String, String> parameters) {
