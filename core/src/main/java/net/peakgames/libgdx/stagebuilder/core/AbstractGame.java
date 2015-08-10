@@ -117,14 +117,38 @@ public abstract class AbstractGame implements ApplicationListener {
     }
 
     public void addScreen(Screen screen) {
-        if (screen == null) {
-            throw new RuntimeException("Screen can not be null.");
-        }
+        validateScreen(screen);
         getTopScreen().hide();
 
         screens.push(screen);
         this.topScreen = getTopScreen();
         displayTopScreen();
+    }
+
+    private void validateScreen(Screen screen) {
+        if (screen == null) {
+            throw new RuntimeException("Screen can not be null.");
+        }
+    }
+
+    public void replaceTopScreen(Screen screen) {
+        validateScreen(screen);
+        if(screens.isEmpty()) {
+            setScreen(screen);
+        } else {
+            Screen topScreen = getTopScreen();
+            topScreen.hide();
+            topScreen.dispose();
+            screens.pop();
+            screens.push(screen);
+            this.topScreen = getTopScreen();
+            displayTopScreen();
+        }
+    }
+
+    public void replaceTopScreen(Screen screen, Map<String, String> parameters) {
+        ((AbstractScreen) screen).setParameters(parameters);
+        replaceTopScreen(screen);
     }
 
     private void unloadAssets() {
@@ -194,9 +218,7 @@ public abstract class AbstractGame implements ApplicationListener {
     }
 
     public void setScreen(Screen screen) {
-        if (screen == null) {
-            throw new RuntimeException("Screen can not be null.");
-        }
+        validateScreen(screen);
         clearScreens();
 
         screens.push(screen);

@@ -9,6 +9,8 @@
     <textbutton name="textField_screen" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="70" y="340" width="250" text="TextField" fontName="default_font.fnt" />
     <textbutton name="image_screen" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="470" y="400" width="250" text="Image" fontName="default_font.fnt" />
     <textbutton name="button_screen" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="70" y="400" width="250" text="Button - TextButton" fontName="default_font.fnt"/>
+    <textbutton name="replace_top_screen" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="70" y="160" width="250" text="Replace Top Screen Demo" fontName="default_font.fnt" />
+
 
     <!-- This custom widget is used as an indicator for async asset loading. Before loading assets visibility is set to true,
          after loading assets visibility is set back to false -->

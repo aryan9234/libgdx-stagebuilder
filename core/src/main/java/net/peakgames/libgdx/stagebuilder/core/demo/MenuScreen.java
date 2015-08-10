@@ -113,6 +113,16 @@ public class MenuScreen extends DemoScreen {
             }
         });
 
+        findButton("replace_top_screen").addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ReplaceTopDemoScreen replaceTopDemoScreen = new ReplaceTopDemoScreen(game);
+                game.addScreen(replaceTopDemoScreen);
+            }
+        });
+
+
+
     }
 
 }
