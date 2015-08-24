@@ -14,6 +14,7 @@ import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
 import net.peakgames.libgdx.stagebuilder.core.model.BaseModel;
 import net.peakgames.libgdx.stagebuilder.core.model.SelectBoxModel;
 import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
+import net.peakgames.libgdx.stagebuilder.core.util.GdxUtils;
 
 public class SelectBoxBuilder extends ActorBuilder {
 
@@ -114,13 +115,13 @@ public class SelectBoxBuilder extends ActorBuilder {
         }
         float max = 0;
         for (String value : values) {
-            float textWidth = font.getBounds(value).width;
+            float textWidth = GdxUtils.getTextWidth(value, font);
             if (textWidth > max) {
                 max = textWidth;
             }
         }
         if (max > maxWidth) {
-            font.setScale(font.getScaleX() * (maxWidth/max));
+            font.getData().setScale(font.getScaleX() * (maxWidth/max));
         }
     }
 

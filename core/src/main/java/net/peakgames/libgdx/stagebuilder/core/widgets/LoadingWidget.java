@@ -17,6 +17,7 @@ import net.peakgames.libgdx.stagebuilder.core.ICustomWidget;
 import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
 import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
 import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
+import net.peakgames.libgdx.stagebuilder.core.util.GdxUtils;
 
 import java.util.Map;
 
@@ -88,7 +89,9 @@ public class LoadingWidget extends WidgetGroup implements ICustomWidget{
 		resizeActor(backgroundImage, sizeMultiplier);
 		resizeActor(foregroundImage, sizeMultiplier);
 		resizeActor(messageLabel, sizeMultiplier);
-		
+
+		float halfOfMessageLabelWidth = GdxUtils.getTextWidth(messageLabel) / 2;
+		float halfOfMessageLabelHeight = GdxUtils.getTextHeight(messageLabel) / 2;
 		if(fullScreen) {
 			this.boundaryWidth = resolutionHelper.getScreenWidth();
 			this.boundaryHeight = resolutionHelper.getScreenHeight();
@@ -96,13 +99,13 @@ public class LoadingWidget extends WidgetGroup implements ICustomWidget{
 			backgroundImage.setPosition(boundaryWidth / 2 - this.backgroundImage.getWidth() / 2, boundaryHeight / 2 - this.backgroundImage.getHeight() / 2);
 			foregroundImage.setPosition(boundaryWidth / 2 - this.foregroundImage.getWidth() / 2, boundaryHeight / 2 - this.foregroundImage.getHeight() / 2);
 			if(messageLabel != null) {				
-				messageLabel.setPosition(boundaryWidth / 2 - messageLabel.getTextBounds().width / 2, boundaryHeight / 2 - messageLabel.getTextBounds().height / 2);
+				messageLabel.setPosition(boundaryWidth / 2 - halfOfMessageLabelWidth, boundaryHeight / 2 - halfOfMessageLabelHeight);
 			}
 		} else {
 			backgroundImage.setSize(boundaryWidth, boundaryHeight);
 			foregroundImage.setSize(boundaryWidth, boundaryHeight);
 			if(messageLabel != null) {					
-				messageLabel.setPosition(backgroundImage.getWidth() / 2 - messageLabel.getTextBounds().width / 2, backgroundImage.getHeight() / 2 - messageLabel.getTextBounds().height / 2);
+				messageLabel.setPosition(backgroundImage.getWidth() / 2 - halfOfMessageLabelWidth, backgroundImage.getHeight() / 2 - halfOfMessageLabelHeight);
 			}
 		}
 		

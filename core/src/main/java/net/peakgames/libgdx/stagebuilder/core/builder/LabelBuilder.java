@@ -8,6 +8,7 @@ package net.peakgames.libgdx.stagebuilder.core.builder;
         import net.peakgames.libgdx.stagebuilder.core.model.BaseModel;
         import net.peakgames.libgdx.stagebuilder.core.model.LabelModel;
         import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
+        import net.peakgames.libgdx.stagebuilder.core.util.GdxUtils;
 
 public class LabelBuilder extends ActorBuilder {
 
@@ -45,7 +46,8 @@ public class LabelBuilder extends ActorBuilder {
     }
 
     private static void scaleLabel(Label label, float labelWidth){
-        float labelTextWidth = label.getTextBounds().width /label.getFontScaleX();
+
+        float labelTextWidth = GdxUtils.getTextWidth(label) /label.getFontScaleX();
         float scaleDownFactor = labelWidth / labelTextWidth;
         if (labelTextWidth > labelWidth) {
             label.setFontScale(label.getStyle().font.getScaleX() * scaleDownFactor);

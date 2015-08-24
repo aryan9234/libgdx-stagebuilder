@@ -19,6 +19,7 @@ import net.peakgames.libgdx.stagebuilder.core.ICustomWidget;
 import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
 import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
 import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
+import net.peakgames.libgdx.stagebuilder.core.util.GdxUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,43 +171,46 @@ public class ResourceMonitorWidget extends WidgetGroup implements ICustomWidget 
         addLabelListeners();
 
         float sizeMultiplier = resolutionHelper.getSizeMultiplier();
-        float emptySpaceHeight = DEFAULT_EMPTY_SPACE_HEIGHT * sizeMultiplier;
+		float emptySpaceHeight = DEFAULT_EMPTY_SPACE_HEIGHT * sizeMultiplier;
 
         nativeHeapLabel.setPosition(0,0);
-        javaHeapLabel.setPosition(0, nativeHeapLabel.getY() + nativeHeapLabel.getTextBounds().height + emptySpaceHeight);
-        fpsLabel.setPosition(0, javaHeapLabel.getY() + javaHeapLabel.getTextBounds().height + emptySpaceHeight);
+		float nativeHeapHeight = GdxUtils.getTextHeight(nativeHeapLabel);
+		float javaHeapHeight = GdxUtils.getTextHeight(javaHeapLabel);
+		float fpsHeight = GdxUtils.getTextHeight(fpsLabel);
+		javaHeapLabel.setPosition(0, nativeHeapLabel.getY() + nativeHeapHeight + emptySpaceHeight);
+		fpsLabel.setPosition(0, javaHeapLabel.getY() + javaHeapHeight + emptySpaceHeight);
 
         maxWidth = findMaxWidth();
-        if (atlasName != null) {
+		if (atlasName != null) {
             backgroundImage = new Image( assets.getTextureAtlas(atlasName).findRegion(backgroundFrame));
-            backgroundImage.setSize(maxWidth, fpsLabel.getTextBounds().height * NORMALIZATION_COEFFICIENT + fpsLabel.getY());
+            backgroundImage.setSize(maxWidth, fpsHeight * NORMALIZATION_COEFFICIENT + fpsLabel.getY());
             this.setSize(backgroundImage.getWidth(), backgroundImage.getHeight());
             this.addActor(backgroundImage);
         }  else {
-            setSize(maxWidth, fpsLabel.getTextBounds().height * NORMALIZATION_COEFFICIENT + fpsLabel.getY());
+            setSize(maxWidth, fpsHeight * NORMALIZATION_COEFFICIENT + fpsLabel.getY());
         }
         this.addActor(fpsLabel);
         this.addActor(nativeHeapLabel);
         this.addActor(javaHeapLabel);
         this.addActor(intervalLabel);
         this.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            	touchedX = x;
-            	touchedY = y;
-                return true;
-            }
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				touchedX = x;
+				touchedY = y;
+				return true;
+			}
 
-            @Override
-            public void touchDragged(InputEvent event, float x, float y, int pointer) {
-                setPosition(getX() + x - touchedX, getY() + y - touchedY);
-            }
+			@Override
+			public void touchDragged(InputEvent event, float x, float y, int pointer) {
+				setPosition(getX() + x - touchedX, getY() + y - touchedY);
+			}
 
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 
-            }
-        });
+			}
+		});
         
         timeSinceLastUpdate = 0;
         graphicHeight = resolutionHelper.getScreenHeight() / 6;
@@ -214,7 +218,8 @@ public class ResourceMonitorWidget extends WidgetGroup implements ICustomWidget 
         javaHeapSizesPerSecondList = new ArrayList<Long>(MAX_VALUES_STORED_IN_LISTS);
         nativeHeapSizesPerSecondList = new ArrayList<Long>(MAX_VALUES_STORED_IN_LISTS);
         fpsList = new ArrayList<Long>(MAX_VALUES_STORED_IN_LISTS);
-        intervalLabel.setPosition(0, - graphicHeight - intervalLabel.getTextBounds().height * NORMALIZATION_COEFFICIENT);
+		float intervalLabelHeight = GdxUtils.getTextHeight(intervalLabel.getText().toString(), intervalLabel.getStyle().font);
+		intervalLabel.setPosition(0, - graphicHeight - intervalLabelHeight * NORMALIZATION_COEFFICIENT);
         
         this.setPosition(resolutionHelper.getGameAreaPosition().x, intervalLabel.getY() * -1);
     }
@@ -261,12 +266,15 @@ public class ResourceMonitorWidget extends WidgetGroup implements ICustomWidget 
     }
 
 	private float findMaxWidth() {
-        float maxWidth = fpsLabel.getTextBounds().width;
-        if ( javaHeapLabel.getTextBounds().width > maxWidth){
-            maxWidth = javaHeapLabel.getTextBounds().width;
+		float fpsWidth = GdxUtils.getTextWidth(fpsLabel);
+		float javaHeapWidth = GdxUtils.getTextWidth(javaHeapLabel);
+		float nativeHeapWidth = GdxUtils.getTextWidth(nativeHeapLabel);
+		float maxWidth = fpsWidth;
+        if ( javaHeapWidth > maxWidth){
+            maxWidth = javaHeapWidth;
         }
-        if ( nativeHeapLabel.getTextBounds().width > maxWidth){
-            maxWidth = nativeHeapLabel.getTextBounds().width;
+        if ( nativeHeapWidth > maxWidth){
+            maxWidth = nativeHeapWidth;
         }
         return maxWidth * NORMALIZATION_COEFFICIENT;
     }

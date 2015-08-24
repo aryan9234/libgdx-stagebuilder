@@ -13,4 +13,6 @@
 
     <label name="3" x="400" y="100" width="400"  align="center"  text="Green label 4x" fontScale="4" fontName="default_font.fnt" fontColor="00ff00"/>
 
+
+    <label name="sdfsdf" x="0" y="50" width="400" fontAutoScale="true"  text="1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9" fontName="default_font.fnt" fontColor="DFDFDF"/>
 </group>

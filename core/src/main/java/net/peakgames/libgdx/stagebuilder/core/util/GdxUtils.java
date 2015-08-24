@@ -1,15 +1,19 @@
 package net.peakgames.libgdx.stagebuilder.core.util;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class GdxUtils {
+
+    private static GlyphLayout glyphLayout = new GlyphLayout();
+
     public static String trim( String text, float width, BitmapFont font){
         if ( text == null){
             return null;
         }
-        if ( font.getBounds(text).width <= width){
+        if ( getTextWidth(text, font) <= width){
             return text;
         }
         text = text.concat(".");
@@ -24,7 +28,7 @@ public class GdxUtils {
                 break;
             }
         }
-        while ( font.getBounds(text).width > width);
+        while ( getTextWidth(text, font) > width);
         return text;
     }
 
@@ -33,7 +37,7 @@ public class GdxUtils {
     }
 
     public static void autoScaleLabel(Label label){
-        float labelTextWidth = label.getTextBounds().width /label.getFontScaleX();
+        float labelTextWidth = getTextWidth(label);
         float labelWidth = label.getWidth();
         float scaleDownFactor = labelWidth / labelTextWidth;
         if (labelTextWidth > labelWidth) {
@@ -44,11 +48,29 @@ public class GdxUtils {
     public static void autoScaleTextButton(TextButton textButton){
         Label label = textButton.getLabel();
         float textButtonWidth = textButton.getWidth() - textButton.getPadLeft() - textButton.getPadRight();
-        float labelWidth = label.getTextBounds().width;
+        float labelWidth = getTextWidth(label);
         if (labelWidth > textButtonWidth) {
             float scaleDownFactor = textButtonWidth / labelWidth;
             label.setFontScale(label.getStyle().font.getScaleX() * scaleDownFactor);
             label.setWidth(label.getWidth() * scaleDownFactor);
         }
+    }
+
+    public static float getTextWidth(Label label) {
+        return getTextWidth(label.getText().toString(), label.getStyle().font);
+    }
+
+    public static float getTextHeight(Label label) {
+        return getTextHeight(label.getText().toString(), label.getStyle().font);
+    }
+
+    public static float getTextWidth(String text, BitmapFont font) {
+        glyphLayout.setText(font, text);
+        return glyphLayout.width;
+    }
+
+    public static float getTextHeight(String text, BitmapFont font) {
+        glyphLayout.setText(font, text);
+        return glyphLayout.height;
     }
 }

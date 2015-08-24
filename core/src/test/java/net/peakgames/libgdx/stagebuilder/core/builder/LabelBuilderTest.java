@@ -1,11 +1,11 @@
 package net.peakgames.libgdx.stagebuilder.core.builder;
 
 
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
-import net.peakgames.libgdx.stagebuilder.core.builder.ActorBuilder;
+import com.badlogic.gdx.utils.Align;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+
 
 public class LabelBuilderTest {
 
