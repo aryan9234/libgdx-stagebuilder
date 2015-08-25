@@ -28,7 +28,7 @@ public class Assets implements AssetsInterface {
     @Override
     public BitmapFont getFont(String fontName) {
         BitmapFont bitmapFont = this.assetManager.get(fontName, BitmapFont.class);
-        bitmapFont.setScale(resolutionHelper.getSizeMultiplier());
+        bitmapFont.getData().setScale(resolutionHelper.getSizeMultiplier(), resolutionHelper.getSizeMultiplier());
         return bitmapFont;
     }
 
