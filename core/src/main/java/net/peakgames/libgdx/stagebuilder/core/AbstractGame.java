@@ -182,15 +182,8 @@ public abstract class AbstractGame implements ApplicationListener {
             return false;
         }
         try {
-            unloadAssets();
-            Screen top = screens.pop();
-            top.hide();
-            top.dispose();
-            this.topScreen = getTopScreen();
-            if(topScreen instanceof AbstractScreen){
-                addParameters(parameters, (AbstractScreen) topScreen);
-            }
-            displayTopScreen();
+            removeScreen();
+            updateTopScreen(parameters);
             return true;
         } catch (EmptyStackException e) {
             Gdx.app.log(TAG, "Can not switch to previous screen. ", e);
@@ -198,18 +191,48 @@ public abstract class AbstractGame implements ApplicationListener {
         return false;
     }
 
-    public void backToPreviousScreenByScreenCount(int screenCountToGoBack, Map<String, String> parameters) {
-        for(int i=0;i<screenCountToGoBack;i++) {
-            unloadAssets();
-            Screen top = screens.pop();
-            top.hide();
-            top.dispose();
-        }
+    private void updateTopScreen(Map<String, String> parameters) {
         this.topScreen = getTopScreen();
+        System.out.println("updateTopScreen : " + topScreen.getClass().getSimpleName());
         if(topScreen instanceof AbstractScreen){
             addParameters(parameters, (AbstractScreen) topScreen);
         }
         displayTopScreen();
+    }
+
+    public void backToPreviousScreenByScreenCount(int screenCountToGoBack, Map<String, String> parameters) {
+        for(int i=0;i<screenCountToGoBack;i++) {
+            if(getNumberScreens() <= 1) {
+                return;
+            }
+            removeScreen();
+        }
+        updateTopScreen(parameters);
+    }
+
+    public void backToScreen(Class screenClass, Map<String, String> parameters) {
+        if(hasScreenInStack(screenClass)) {
+            while(!getTopScreen().getClass().getSimpleName().equals(screenClass.getSimpleName())) {
+                removeScreen();
+            }
+            updateTopScreen(parameters);
+        }
+    }
+
+    private void removeScreen() {
+        unloadAssets();
+        Screen top = screens.pop();
+        top.hide();
+        top.dispose();
+    }
+
+    private boolean hasScreenInStack(Class screenClass) {
+        for(Screen screen : screens) {
+            if(screen.getClass().getSimpleName().equals(screenClass.getSimpleName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addParameters(Map<String, String> params, AbstractScreen screen){
