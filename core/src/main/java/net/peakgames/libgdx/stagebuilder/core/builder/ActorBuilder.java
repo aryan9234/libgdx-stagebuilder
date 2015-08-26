@@ -77,12 +77,8 @@ public abstract class ActorBuilder {
         actor.setWidth(model.getWidth());
         actor.setHeight(model.getHeight());
 
-        if (model.getScale() != 1) {
-            actor.setScale(model.getScale(), model.getScale());
-        } else {
-            actor.setScaleX(model.getScaleX());
-            actor.setScaleY(model.getScaleY());
-        }
+        setScaleProperty(model, actor);
+
         actor.setZIndex(model.getzIndex());
         actor.setVisible(model.isVisible());
 
@@ -118,6 +114,15 @@ public abstract class ActorBuilder {
         }
         
         setTouchable(actor, model);
+    }
+
+    protected void setScaleProperty(BaseModel model, Actor actor) {
+        if (model.getScale() != 1) {
+            actor.setScale(model.getScale(), model.getScale());
+        } else {
+            actor.setScaleX(model.getScaleX());
+            actor.setScaleY(model.getScaleY());
+        }
     }
 
     private void setTouchable(Actor actor, BaseModel model) {

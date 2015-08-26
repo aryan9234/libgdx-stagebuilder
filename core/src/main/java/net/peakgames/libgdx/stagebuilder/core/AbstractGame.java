@@ -198,6 +198,20 @@ public abstract class AbstractGame implements ApplicationListener {
         return false;
     }
 
+    public void backToPreviousScreenByScreenCount(int screenCountToGoBack, Map<String, String> parameters) {
+        for(int i=0;i<screenCountToGoBack;i++) {
+            unloadAssets();
+            Screen top = screens.pop();
+            top.hide();
+            top.dispose();
+        }
+        this.topScreen = getTopScreen();
+        if(topScreen instanceof AbstractScreen){
+            addParameters(parameters, (AbstractScreen) topScreen);
+        }
+        displayTopScreen();
+    }
+
     private void addParameters(Map<String, String> params, AbstractScreen screen){
         if(params != null && !params.isEmpty()){
             Map<String, String> mergedMap = new HashMap<String, String>();
