@@ -193,7 +193,6 @@ public abstract class AbstractGame implements ApplicationListener {
 
     private void updateTopScreen(Map<String, String> parameters) {
         this.topScreen = getTopScreen();
-        System.out.println("updateTopScreen : " + topScreen.getClass().getSimpleName());
         if(topScreen instanceof AbstractScreen){
             addParameters(parameters, (AbstractScreen) topScreen);
         }
