@@ -37,6 +37,7 @@ public class ExternalGroupModelBuilder extends ActorBuilder {
         group.setName( model.getName());
         model.setWidth( group.getWidth());
         model.setHeight( group.getHeight());
+
         Vector2 screenPos;
         if (model.getScreenAlignmentSupport() == null) {
             screenPos = calculateScreenPosition(model.getScreenAlignment(), model);
@@ -50,5 +51,7 @@ public class ExternalGroupModelBuilder extends ActorBuilder {
         }else{
             group.setPosition(model.getX() * resolutionHelper.getPositionMultiplier(), model.getY() * resolutionHelper.getPositionMultiplier());
         }
+
+        setScaleProperty(model, group);
     }
 }

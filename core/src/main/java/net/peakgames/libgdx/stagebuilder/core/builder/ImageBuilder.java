@@ -1,5 +1,6 @@
 package net.peakgames.libgdx.stagebuilder.core.builder;
 
+import android.util.Log;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,6 +16,8 @@ import net.peakgames.libgdx.stagebuilder.core.model.ImageModel;
 import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
 
 public class ImageBuilder extends ActorBuilder {
+
+    private static final int MIN_VISIBLE_AREA_FOR_PATCH_REGION = 2;
 
     public ImageBuilder(AssetsInterface assets, ResolutionHelper resolutionHelper, LocalizationService localizationService) {
         super(assets, resolutionHelper, localizationService);
@@ -33,7 +36,6 @@ public class ImageBuilder extends ActorBuilder {
         normalizeModelSize(imageModel,
                 image.getDrawable().getMinWidth(),
                 image.getDrawable().getMinHeight());
-
 
         setBasicProperties(model, image);
 
@@ -60,7 +62,7 @@ public class ImageBuilder extends ActorBuilder {
     }
 
     private Image createFromTexture(ImageModel imageModel) {
-        if(imageModel.getNinepatch()){
+        if(imageModel.isNinepatch()){
             NinePatchDrawable ninePatchDrawable = new NinePatchDrawable();
 
             NinePatch patch;
@@ -88,32 +90,63 @@ public class ImageBuilder extends ActorBuilder {
     }
 
     private Image createFromTextureAtlas(ImageModel imageModel) {
-        if(imageModel.getNinepatch()){
-            if (imageModel.getNinepatchOffset() != 0) {
-                return new Image(createNinePatchDrawable(imageModel.getFrame(), assets.getTextureAtlas(imageModel.getAtlasName()), imageModel.getNinepatchOffset()));
-            } else {
-                return new Image(createNinePatchDrawable(imageModel.getFrame(), assets.getTextureAtlas(imageModel.getAtlasName()), imageModel.getNinepatchOffsetLeft(),
-                        imageModel.getNinepatchOffsetRight(), imageModel.getNinepatchOffsetTop(), imageModel.getNinepatchOffsetBottom()));
+        TextureAtlas textureAtlas = assets.getTextureAtlas(imageModel.getAtlasName());
+        if(imageModel.isNinepatch()){
+            if(imageModel.getNinepatchOffset() != 0) {
+                imageModel.applyNinepatchValueForAllParts(imageModel.getNinepatchOffset());
             }
+            normalizeNinePatchValues(imageModel, textureAtlas);
+            return new Image(createNinePatchDrawable(imageModel.getFrame(), textureAtlas, imageModel.getNinepatchOffsetLeft(),
+                        imageModel.getNinepatchOffsetRight(), imageModel.getNinepatchOffsetTop(), imageModel.getNinepatchOffsetBottom()));
+
         }else{
-            TextureAtlas textureAtlas = assets.getTextureAtlas(imageModel.getAtlasName());
             TextureAtlas.AtlasRegion atlasRegion = textureAtlas.findRegion(getLocalizedString(imageModel.getFrame()));
             return new Image(atlasRegion);
         }
     }
 
-    private NinePatchDrawable createNinePatchDrawable(String imageName, TextureAtlas textureAtlas ,int patchOffset) {
+    private NinePatchDrawable createNinePatchDrawable(String imageName, TextureAtlas textureAtlas ,int patchOffsetLeft, int patchOffsetRight, int patchOffsetTop, int patchOffsetBottom) {
         NinePatchDrawable ninePatchDrawable = new NinePatchDrawable();
-        NinePatch patch = new NinePatch(textureAtlas.findRegion(imageName), patchOffset, patchOffset, patchOffset, patchOffset);
+        TextureAtlas.AtlasRegion region = textureAtlas.findRegion(imageName);
+        NinePatch patch = new NinePatch(region, patchOffsetLeft, patchOffsetRight, patchOffsetTop, patchOffsetBottom);
         ninePatchDrawable.setPatch(patch);
         return ninePatchDrawable;
     }
 
-    private NinePatchDrawable createNinePatchDrawable(String imageName, TextureAtlas textureAtlas ,int patchOffsetLeft, int patchOffsetRight, int patchOffsetTop, int patchOffsetBottom) {
-        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable();
-        NinePatch patch = new NinePatch(textureAtlas.findRegion(imageName), patchOffsetLeft, patchOffsetRight, patchOffsetTop, patchOffsetBottom);
-        ninePatchDrawable.setPatch(patch);
-        return ninePatchDrawable;
+    private void normalizeNinePatchValues(ImageModel imageModel, TextureAtlas textureAtlas) {
+        TextureAtlas.AtlasRegion ninePatchRegion = textureAtlas.findRegion(imageModel.getFrame());
+        imageModel.setNinepatchOffsetLeft((int) (imageModel.getNinepatchOffsetLeft() * resolutionHelper.getPositionMultiplier()));
+        imageModel.setNinepatchOffsetRight((int)(imageModel.getNinepatchOffsetRight() * resolutionHelper.getPositionMultiplier()));
+        imageModel.setNinepatchOffsetTop((int)(imageModel.getNinepatchOffsetTop() * resolutionHelper.getPositionMultiplier()));
+        imageModel.setNinepatchOffsetBottom((int)(imageModel.getNinepatchOffsetBottom() * resolutionHelper.getPositionMultiplier()));
+        normalizeHorizontalPatches(imageModel, ninePatchRegion);
+        normalizeVerticalPatches(imageModel, ninePatchRegion);
+    }
+
+    private void normalizeHorizontalPatches(ImageModel imageModel, TextureAtlas.AtlasRegion ninePatchRegion) {
+        int totalPatchWidth = imageModel.getNinepatchOffsetLeft() + imageModel.getNinepatchOffsetRight();
+        if(totalPatchWidth >= ninePatchRegion.getRegionWidth()) {
+            int usableAreaWidth = calculateMinUsableAreaSize(ninePatchRegion.getRegionWidth());
+            imageModel.setNinepatchOffsetLeft(calculateNewPatchSize(usableAreaWidth, imageModel.getNinepatchOffsetLeft(), totalPatchWidth));
+            imageModel.setNinepatchOffsetRight(calculateNewPatchSize(usableAreaWidth, imageModel.getNinepatchOffsetRight(), totalPatchWidth));
+        }
+    }
+
+    private void normalizeVerticalPatches(ImageModel imageModel, TextureAtlas.AtlasRegion ninePatchRegion) {
+        int totalPatchHeight = imageModel.getNinepatchOffsetTop() + imageModel.getNinepatchOffsetBottom();
+        if(totalPatchHeight >= ninePatchRegion.getRegionHeight()) {
+            int usableAreaHeight = calculateMinUsableAreaSize(ninePatchRegion.getRegionHeight());
+            imageModel.setNinepatchOffsetTop(calculateNewPatchSize(usableAreaHeight, imageModel.getNinepatchOffsetTop(), totalPatchHeight ));
+            imageModel.setNinepatchOffsetBottom(calculateNewPatchSize(usableAreaHeight, imageModel.getNinepatchOffsetBottom(), totalPatchHeight ));
+        }
+    }
+
+    private static int calculateMinUsableAreaSize(int size) {
+        return size - MIN_VISIBLE_AREA_FOR_PATCH_REGION;
+    }
+
+    private static int calculateNewPatchSize(int usableAreaSize, int patchSize, int totalPatchSize) {
+        return (int)(usableAreaSize * (patchSize / (float)totalPatchSize));
     }
 
 }
