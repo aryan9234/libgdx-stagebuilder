@@ -239,7 +239,6 @@ public class XmlModelBuilder {
     	textFieldModel.setBackgroundImageName(XmlHelper.readStringAttribute(xmlParser, "backgroundImage"));
     	textFieldModel.setSelectionImageName(XmlHelper.readStringAttribute(xmlParser, "selectionImage"));
     	textFieldModel.setCursorImageName(XmlHelper.readStringAttribute(xmlParser, "cursorImage"));
-        textFieldModel.setBackgroundUsingPatchSize(XmlHelper.readBooleanAttribute(xmlParser, "bgUsingPatchSize", false));
         textFieldModel.setBackgroundOffset(XmlHelper.readIntAttribute(xmlParser, "backgroundOffset", 0));
         textFieldModel.setBackgroundPatchSizeLeft(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeLeft", 0));
         textFieldModel.setBackgroundPatchSizeRight(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeRight", 0));
@@ -267,7 +266,6 @@ public class XmlModelBuilder {
         textAreaModel.setBackgroundImageName(XmlHelper.readStringAttribute(xmlParser, "backgroundImage"));
         textAreaModel.setSelectionImageName(XmlHelper.readStringAttribute(xmlParser, "selectionImage"));
         textAreaModel.setCursorImageName(XmlHelper.readStringAttribute(xmlParser, "cursorImage"));
-        textAreaModel.setBackgroundUsingPatchSize(XmlHelper.readBooleanAttribute(xmlParser, "bgUsingPatchSize", false));
         textAreaModel.setBackgroundOffset(XmlHelper.readIntAttribute(xmlParser, "backgroundOffset", 0));
         textAreaModel.setBackgroundPatchSizeLeft(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeLeft", 0));
         textAreaModel.setBackgroundPatchSizeRight(XmlHelper.readIntAttribute(xmlParser, "bgPatchSizeRight", 0));

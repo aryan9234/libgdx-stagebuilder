@@ -55,8 +55,8 @@ public class SelectBoxBuilder extends ActorBuilder {
                 selectionBackgroundTextureRegion,
                 selectBoxModel.getSelectionBackgroundNinePatchSizeLeft(),
                 selectBoxModel.getSelectionBackgroundNinePatchSizeRight(),
-                selectBoxModel.getBackgroundNinePatchSizeTop(),
-                selectBoxModel.getBackgroundNinePatchSizeBottom()
+                selectBoxModel.getSelectionBackgroundNinePatchSizeTop(),
+                selectBoxModel.getSelectionBackgroundNinePatchSizeBottom()
         );
 
         TextureRegion backgroundTextureRegion = textureAtlas.findRegion(selectBoxModel.getBackground());
