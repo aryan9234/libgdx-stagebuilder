@@ -56,7 +56,7 @@ public class ImageModel extends BaseModel {
         this.type = type;
     }
 
-    public boolean getNinepatch() {return ninepatch; }
+    public boolean isNinepatch() {return ninepatch; }
 
     public void setNinepatch(boolean ninepatch) { this.ninepatch = ninepatch; }
 
@@ -110,5 +110,30 @@ public class ImageModel extends BaseModel {
 
     public String getMagFilter() {
         return magFilter;
+    }
+
+    @Override
+    public String toString() {
+        return "ImageModel{" +
+                "atlasName='" + atlasName + '\'' +
+                ", frame='" + frame + '\'' +
+                ", textureSrc='" + textureSrc + '\'' +
+                ", type='" + type + '\'' +
+                ", ninepatch=" + ninepatch +
+                ", ninepatchOffset=" + ninepatchOffset +
+                ", ninepatchOffsetLeft=" + ninepatchOffsetLeft +
+                ", ninepatchOffsetRight=" + ninepatchOffsetRight +
+                ", ninepatchOffsetTop=" + ninepatchOffsetTop +
+                ", ninepatchOffsetBottom=" + ninepatchOffsetBottom +
+                ", minFilter='" + minFilter + '\'' +
+                ", magFilter='" + magFilter + '\'' +
+                '}';
+    }
+
+    public void applyNinepatchValueForAllParts(int ninepatchOffset) {
+        setNinepatchOffsetLeft(ninepatchOffset);
+        setNinepatchOffsetRight(ninepatchOffset);
+        setNinepatchOffsetTop(ninepatchOffset);
+        setNinepatchOffsetBottom(ninepatchOffset);
     }
 }
