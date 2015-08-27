@@ -8,7 +8,6 @@ public class TextFieldModel extends ButtonModel {
 	private String cursorImageName;
 	private String selectionImageName;
 	private String backgroundImageName;
-    private boolean backgroundUsingPatchSize;
     private int backgroundOffset;
     private int backgroundPatchSizeLeft;
     private int backgroundPatchSizeRight;
@@ -75,11 +74,10 @@ public class TextFieldModel extends ButtonModel {
 	}
 
     public boolean isBackgroundUsingPatchSize() {
-        return backgroundUsingPatchSize;
-    }
-
-    public void setBackgroundUsingPatchSize(boolean backgroundUsingPatchSize) {
-        this.backgroundUsingPatchSize = backgroundUsingPatchSize;
+        return backgroundPatchSizeLeft > 0
+                && backgroundPatchSizeRight > 0
+                && backgroundPatchSizeTop > 0
+                && backgroundPatchSizeBottom > 0;
     }
 
     public int getBackgroundOffset() {
