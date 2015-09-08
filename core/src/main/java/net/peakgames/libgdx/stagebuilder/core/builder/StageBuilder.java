@@ -70,18 +70,27 @@ public class StageBuilder {
     }
 
     public Group buildGroup(String fileName) throws Exception {
-        XmlModelBuilder xmlModelBuilder = new XmlModelBuilder();
-        List<BaseModel> modelList = xmlModelBuilder.buildModels(getLayoutFile(fileName));
-        GroupModel groupModel = (GroupModel) modelList.get(0);
         Group group = new Group();
-        GroupBuilder groupBuilder = (GroupBuilder) builders.get(GroupModel.class);
-        groupBuilder.setBasicProperties(groupModel, group);
-        updateGroupSizeAndPosition(group, groupModel);
+        GroupModel groupModel = buildGroupOnly(fileName, group);
+        fillGroupActors(group, groupModel);
+        return group;
+    }
+
+    public void fillGroupActors(Group group, GroupModel groupModel) {
         for (BaseModel model : groupModel.getChildren()) {
             ActorBuilder builder = builders.get(model.getClass());
             group.addActor(builder.build(model));
         }
-        return group;
+    }
+
+    public GroupModel buildGroupOnly(String fileName, Group groupToBeUpdated) throws Exception {
+        XmlModelBuilder xmlModelBuilder = new XmlModelBuilder();
+        List<BaseModel> modelList = xmlModelBuilder.buildModels(getLayoutFile(fileName));
+        GroupModel groupModel = (GroupModel) modelList.get(0);
+        GroupBuilder groupBuilder = (GroupBuilder) builders.get(GroupModel.class);
+        groupBuilder.setBasicProperties(groupModel, groupToBeUpdated);
+        updateGroupSizeAndPosition(groupToBeUpdated, groupModel);
+        return groupModel;
     }
 
     public void buildGroupAsync(String fileName){
@@ -106,8 +115,15 @@ public class StageBuilder {
         @Override
         public void run() {
             try {
-                Group group = buildGroup(fileName);
-                fireOnGroupBuilded(fileName, group);
+                final Group group = new Group();
+                final GroupModel groupModel = buildGroupOnly(fileName, group);
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        fillGroupActors(group, groupModel);
+                        fireOnGroupBuilded(fileName, group);
+                    }
+                });
             } catch (Exception e) {
                 fireOnGroupBuildFailed(fileName, e);
             }
