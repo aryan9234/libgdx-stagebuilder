@@ -109,6 +109,7 @@ public class ImageBuilder extends ActorBuilder {
         NinePatchDrawable ninePatchDrawable = new NinePatchDrawable();
         TextureAtlas.AtlasRegion region = textureAtlas.findRegion(imageName);
         NinePatch patch = new NinePatch(region, patchOffsetLeft, patchOffsetRight, patchOffsetTop, patchOffsetBottom);
+        patch.scale(resolutionHelper.getSizeMultiplier(), resolutionHelper.getSizeMultiplier());
         ninePatchDrawable.setPatch(patch);
         return ninePatchDrawable;
     }
