@@ -199,7 +199,10 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         if(!resetPosition) {
             if(topActorY != 0 && topActorHeight != 0) {
                 float yDiff = topActorHeight - (getHeight() - topActorY);
-                for(Actor actor : getChildren()) {
+                SnapshotArray<Actor> children = getChildren();
+                int size = children.size;
+                for(int i=0; i<size; i++) {
+                    Actor actor = children.get(i);
                     actor.setY(actor.getY() + yDiff);
                 }
             }
@@ -448,8 +451,10 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 }
             }
         }
-
-        for (Actor actor : getChildren()) {
+        SnapshotArray<Actor> children = getChildren();
+        int size = children.size;
+        for (int i=0; i<size; i++) {
+            Actor actor = children.get(i);
             actor.setY(actor.getY() - dragDistance);
         }
     }
@@ -492,7 +497,10 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
 
         float totalHeightOfUpperActors = actor.getHeight();
         int itemIndex = 0;
-        for(Actor upperActor : getChildren()) {
+        SnapshotArray<Actor> children = getChildren();
+        int size = children.size;
+        for(int i=0; i<size; i++) {
+            Actor upperActor =  children.get(i);
             if(itemIndex >= listAdapterIndex) {
                 break;
             }
@@ -522,7 +530,10 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     private Actor getBottomActor() {
         Actor bottomActor = EMPTY_ACTOR;
         float minY = Integer.MAX_VALUE;
-        for (Actor actor : getChildren()) {
+        SnapshotArray<Actor> children = getChildren();
+        int size = children.size;
+        for (int i=0; i<size; i++) {
+            Actor actor = children.get(i);
             if (actor.getY() < minY) {
                 bottomActor = actor;
                 minY = bottomActor.getY();
@@ -533,8 +544,12 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
 
     private Actor getTopActor() {
         Actor topActor = EMPTY_ACTOR;
-        float maxY = 0;
-        for (Actor actor : getChildren()) {
+        float maxY = Integer.MIN_VALUE;
+
+        SnapshotArray<Actor> children = getChildren();
+        int size = children.size;
+        for (int i=0; i<size; i++) {
+            Actor actor = children.get(i);
             if (actor.getY() > maxY) {
                 topActor = actor;
                 maxY = actor.getY();
