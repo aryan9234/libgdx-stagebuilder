@@ -108,10 +108,9 @@ public class Assets implements AssetsInterface {
     }
 
     private String getAssetName(String assetName) {
-        if(assetAliasMap.containsKey(assetName)) {
-            return assetAliasMap.get(assetName);
-        }
-        return assetName;
+        String result = assetAliasMap.get(assetName);
+        result = (result == null)? assetName : result;
+        return result;
     }
 
 }
