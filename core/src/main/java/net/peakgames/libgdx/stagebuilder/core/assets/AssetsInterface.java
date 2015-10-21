@@ -20,6 +20,8 @@ public interface AssetsInterface {
 
     public void addAssetConfiguration(String key, String fileName, Class<?> type);
 
+    public void addAssetConfiguration(String key, String fileName, String alias, Class<?> type);
+
     public void removeAssetConfiguration(String key);
 
     public void loadAssetsSync(String key);
@@ -37,5 +39,9 @@ public interface AssetsInterface {
     public Vector2 findBestResolution();
 
     public void resetAlreadyLoadedAssetsMap();
+
+    public void clearAllAliases();
+
+    public void removeAlias(String alias);
 
 }
