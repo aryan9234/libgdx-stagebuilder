@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Assets implements AssetsInterface {
 
@@ -17,34 +14,42 @@ public class Assets implements AssetsInterface {
     private final ResolutionHelper resolutionHelper;
     private AssetManager assetManager;
     private AssetLoader assetLoader;
+    private Map<String, String> assetAliasMap;
 
     public Assets(StageBuilderFileHandleResolver fileHandleResolver, ResolutionHelper resolutionHelper) {
         this.fileHandleResolver = fileHandleResolver;
         this.resolutionHelper = resolutionHelper;
         this.assetManager = new AssetManager(fileHandleResolver);
         this.assetLoader = new AssetLoader(this.assetManager);
+        this.assetAliasMap = new HashMap<String, String>();
     }
 
     @Override
     public BitmapFont getFont(String fontName) {
-        BitmapFont bitmapFont = this.assetManager.get(fontName, BitmapFont.class);
+        BitmapFont bitmapFont = this.assetManager.get(getAssetName(fontName), BitmapFont.class);
         bitmapFont.getData().setScale(resolutionHelper.getSizeMultiplier(), resolutionHelper.getSizeMultiplier());
         return bitmapFont;
     }
 
     @Override
     public TextureAtlas getTextureAtlas(String atlasName) {
-        return this.assetManager.get(atlasName, TextureAtlas.class);
+        return this.assetManager.get(getAssetName(atlasName), TextureAtlas.class);
     }
 
     @Override
     public Texture getTexture(String textureName) {
-        return this.assetManager.get(textureName, Texture.class);
+        return this.assetManager.get(getAssetName(textureName), Texture.class);
     }
 
     @Override
     public void addAssetConfiguration(String key, String fileName, Class<?> type) {
         this.assetLoader.addAssetConfiguration(key, fileName, type);
+    }
+
+    @Override
+    public void addAssetConfiguration(String key, String fileName, String alias, Class<?> type) {
+        assetAliasMap.put(alias, fileName);
+        addAssetConfiguration(key, fileName, type);
     }
 
     @Override
@@ -73,8 +78,8 @@ public class Assets implements AssetsInterface {
     }
 
     @Override
-    public void unloadAssets(String key, Set<String> exludedSet) {
-        this.assetLoader.unloadAssets(key, exludedSet);
+    public void unloadAssets(String key, Set<String> excludedSet) {
+        this.assetLoader.unloadAssets(key, excludedSet);
     }
 
     @Override
@@ -90,6 +95,23 @@ public class Assets implements AssetsInterface {
     @Override
     public void resetAlreadyLoadedAssetsMap() {
          this.assetLoader.resetAlreadyLoadedAssetMap();
+    }
+
+    @Override
+    public void clearAllAliases() {
+        assetAliasMap.clear();
+    }
+
+    @Override
+    public void removeAlias(String alias) {
+        assetAliasMap.remove(alias);
+    }
+
+    private String getAssetName(String assetName) {
+        if(assetAliasMap.containsKey(assetName)) {
+            return assetAliasMap.get(assetName);
+        }
+        return assetName;
     }
 
 }
