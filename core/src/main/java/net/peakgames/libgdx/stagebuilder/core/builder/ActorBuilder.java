@@ -92,13 +92,12 @@ public abstract class ActorBuilder {
         }
 
         if (model.getOriginX() != 0) {
-            actor.setOriginX(model.getOriginX());
+            actor.setOriginX(actor.getWidth() * model.getOriginX());
         }
 
         if (model.getOriginY() != 0) {
-            actor.setOriginY(model.getOriginY());
+            actor.setOriginY(actor.getHeight() * model.getOriginY());
         }
-
 
         actor.setName(model.getName());
         Vector2 screenPos;
