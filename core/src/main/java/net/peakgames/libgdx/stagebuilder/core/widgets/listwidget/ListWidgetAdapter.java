@@ -44,7 +44,7 @@ public abstract class ListWidgetAdapter<T> implements IListWidgetAdapter<T> {
 
     @Override
     public void notifyDataSetChanged() {
-        dataSetChangeListener.onListWidgetDataSetChanged(false);
+        dataSetChangeListener.onListWidgetDataSetChanged(true);
     }
 
     @Override
