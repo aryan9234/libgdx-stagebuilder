@@ -120,7 +120,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             batch.end();
             debugRenderer.setProjectionMatrix(batch.getProjectionMatrix());
             debugRenderer.begin(ShapeRenderer.ShapeType.Line);
-            debugRenderer.rect(getX() + this.gameAreaPosition.x, getY() + this.gameAreaPosition.y, getWidth(), getHeight());
+            debugRenderer.rect(getX() + getParent().getX(), getY() + getParent().getY(), getWidth(), getHeight());
             debugRenderer.setColor(Color.YELLOW);
             debugRenderer.end();
             batch.begin();
@@ -131,28 +131,30 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     public void act(float delta) {
         super.act(delta);
         if (needsLayout) {
-            float headActorPos = 0;
+            if (state != ListWidgetState.STEADY) {
+                handleState(delta);
+                return;
+            }
+            
             int headActorIndex = 0;
-            float headActorMeasure = 0;
             if(hasChildren()) {
                 Actor headActor = getHeadActor();
-                headActorMeasure = getActorMeasure(headActor);
-                headActorPos = getActorPos(headActor);
                 headActorIndex = (Integer)headActor.getUserObject();
             }
 
             if(resetPosition) {
-                state = ListWidgetState.STEADY;
                 clearAndInitActorList(headActorIndex);
-                retouchActorPositions(headActorPos, headActorMeasure);
             } else {
                 resetActorsData(headActorIndex);
             }
             settleIfNecessary();
-
             needsLayout = false;
         }
 
+        handleState(delta);
+    }
+
+    private void handleState(float delta) {
         switch (state) {
             case SETTLE_HEAD:
                 handleSettleHead(delta);
@@ -176,22 +178,42 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
 
     private void resetActorsData(int headActorIndex) {
+        Actor lastActor = getTailActor();
+        int tailActorIndex = getActorIndex(lastActor);
         int from = Math.min(headActorIndex, listAdapter.getCount());
-        int to = listAdapter.getCount();
+        int to = Math.max(tailActorIndex + 1, listAdapter.getCount());
         
-        allActorsVisible = from > 0;
         for (int i=from; i<to; i++) {
-            Actor actorToUpdate = getChildWithUserObject(i);
-            if (actorToUpdate == null || isActorEmpty(actorToUpdate)) {
-                break;
+            if (isActorEmpty(lastActor) || (i > tailActorIndex && (isVertical ? getActorPos(lastActor) > 0 : getActorOrigin(lastActor) < measure))) {
+                addItemAfterTail();
+                Actor tailActor = getTailActor(); //actor that is added in previous line
+                if (isVertical ? getActorPos(tailActor) >= 0 : getActorOrigin(tailActor) >= measure) { 
+                    break;
+                }
+                continue;
             }
             
-            listAdapter.getActor(i, actorToUpdate);
-            if (isVertical ? getActorPos(actorToUpdate) < 0 : getActorPos(actorToUpdate) > measure) {
-                allActorsVisible = false;
+            Actor actorToUpdate = getChildWithUserObject(i);
+            if (actorToUpdate == null || isActorEmpty(actorToUpdate)) {
+                continue;
+            }
+            
+            if (i >= listAdapter.getCount()) {
+                recycledActors.add(actorToUpdate);
+                removeActor(actorToUpdate);
+                continue;
+            }
+            
+            guardedGetActor(i, actorToUpdate);
+            if (isActorOutside(actorToUpdate)) {
                 break;
             }
         }
+    }
+
+    private boolean isActorOutside(Actor actor) {
+        return isVertical ? getActorPos(actor) + getActorMeasure(actor) * 0.5f < 0 :
+                getActorPos(actor) - getActorMeasure(actor) * 0.5f > measure;
     }
 
     private void settleIfNecessary() {
@@ -211,6 +233,10 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
 
     private void clearAndInitActorList(int headActorIndex) {
+        if (headActorIndex < 0) {
+            return;
+        }
+        
         clearChildren();
         allActorsVisible = true;
         int from = Math.min(headActorIndex, listAdapter.getCount());
@@ -221,21 +247,9 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         int counter = 0;
         for (int i = from; i < to; i++) {
             Actor actor = addActorToListWidget(counter++, i);
-            if (isVertical ? getActorPos(actor) < 0 : getActorPos(actor) > measure) {
+            if (isActorOutside(actor)) {
                 allActorsVisible = false;
                 break;
-            }
-        }
-    }
-
-    private void retouchActorPositions(float headActorPos, float headActorMeasure) {
-        if(headActorPos != 0 && headActorMeasure != 0) {
-            float diff = isVertical ? measure - (headActorPos + headActorMeasure) : -headActorPos + headPadding;
-            SnapshotArray<Actor> children = getChildren();
-            int size = children.size;
-            for(int i=0; i<size; i++) {
-                Actor actor = children.get(i);
-                setActorPos(actor, getActorPos(actor) + diff);
             }
         }
     }
@@ -365,9 +379,9 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             touchDownPos = 0;
 
             if (allActorsVisible) {
-                if (isVertical ? getActorOrigin(getHeadActor()) < measure : getActorPos(getHeadActor()) >= headPadding) {
+                if (isVertical ? getActorOrigin(getHeadActor()) <= measure : getActorPos(getHeadActor()) >= headPadding) {
                     state = ListWidgetState.SETTLE_HEAD;
-                } else if (isVertical ? getActorPos(getTailActor()) > 0 : getActorOrigin(getTailActor()) < measure) {
+                } else if (isVertical ? getActorPos(getTailActor()) >= 0 : getActorOrigin(getTailActor()) <= measure) {
                     state = ListWidgetState.SETTLE_TAIL;
                 }
                 
@@ -405,6 +419,11 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 dragDirection = lastDragPoint.x > x ? DragDirection.BACKWARD : DragDirection.FORWARD;
                 dragDistance = lastDragPoint.x - x;
             }
+            
+            if (isDraggingForbidden(dragDirection)) {
+                return;
+            }
+            
             if (Math.abs(dragDistance) > clickCancelDragThreshold) {
                 lastTouchDragTime = System.currentTimeMillis();
                 cancelTouchOnStage();
@@ -423,6 +442,16 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             }
 
             moveItems(dragDirection, dragDistance);
+        }
+
+        private boolean isDraggingForbidden(DragDirection dragDirection) {
+            if (isVertical) {
+                return allActorsVisible && dragDirection == DragDirection.FORWARD && 
+                        getActorOrigin(getHeadActor()) <= measure && getActorPos(getTailActor()) >= 0;
+            } else {
+                return allActorsVisible && dragDirection == DragDirection.BACKWARD &&
+                        getActorPos(getHeadActor()) >= 0 && getActorOrigin(getTailActor()) <= measure;  
+            }
         }
 
         private float calculateVelocity(float pos) {
@@ -507,7 +536,10 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             if (minIndex == 0) {
                 break;
             }
-            Actor newActor = listAdapter.getActor(minIndex - 1, actor);
+            Actor newActor = guardedGetActor(minIndex - 1, actor);
+            if (newActor == null) {
+                return;
+            }
             newActor.setUserObject(minIndex - 1);
             setActorPos(newActor, isVertical ? getActorOrigin(addBeforeActor) : getActorPos(addBeforeActor) - getActorMeasure(addBeforeActor));
             removeActor(actor);
@@ -517,6 +549,11 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
     
     private void addItemAfterTail () {
+        if (recycledActors.isEmpty()) {
+            addActorToListWidget(listAdapter.getCount()-1, listAdapter.getCount()-1);
+            return;
+        }
+        
         for (Actor actor : recycledActors) {
             Actor addAfterActor = getTailActor();
 
@@ -524,13 +561,24 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             if (maxIndex >= listAdapter.getCount() - 1) {
                 break;
             }
-            Actor newActor = listAdapter.getActor(maxIndex + 1, actor);
+            Actor newActor = guardedGetActor(maxIndex + 1, actor);
+            if (newActor == null) {
+                return;
+            }
             newActor.setUserObject(maxIndex + 1);
             setActorPos(newActor, isVertical ? getActorPos(addAfterActor) - getActorMeasure(newActor) : getActorOrigin(addAfterActor));
             removeActor(actor);
             listAdapter.actorRemoved(actor);
             addActor(newActor);
         }
+    }
+    
+    private Actor guardedGetActor(int position, Actor reusable) {
+        if (position < 0 || position >= listAdapter.getCount()) {
+            return null;
+        }
+        
+        return listAdapter.getActor(position, reusable);
     }
 
     private void findRecycledActors(DragDirection dragDirection, float dragDistance) {
@@ -565,7 +613,10 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
 
     private Actor addActorToListWidget(final int listAdapterIndex, int actorIndex) {
-        final Actor actor = listAdapter.getActor(actorIndex, null);
+        final Actor actor = guardedGetActor(actorIndex, null);
+        if (actor == null) {
+            return null;
+        }
         actor.setUserObject(actorIndex);
         addActor(actor);
 

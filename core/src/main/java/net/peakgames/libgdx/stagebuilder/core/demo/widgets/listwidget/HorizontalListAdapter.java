@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import net.peakgames.libgdx.stagebuilder.core.builder.StageBuilder;
@@ -13,11 +12,11 @@ import net.peakgames.libgdx.stagebuilder.core.widgets.listwidget.ListWidgetAdapt
 import java.util.HashMap;
 import java.util.Map;
 
-public class ComplextListAdapter extends ListWidgetAdapter<ListItem> {
+public class HorizontalListAdapter extends ListWidgetAdapter<ListItem> {
 
     Map<String, Drawable> drawableCache = new HashMap<String, Drawable>();
 
-    public ComplextListAdapter(StageBuilder stageBuilder) {
+    public HorizontalListAdapter(StageBuilder stageBuilder) {
         super(stageBuilder);
     }
 
@@ -25,7 +24,7 @@ public class ComplextListAdapter extends ListWidgetAdapter<ListItem> {
     public Actor getActor(int position, Actor reusableActor) {
         if (reusableActor == null) {
             try {
-                Group group = stageBuilder.buildGroup("listwidget/list_item_complex.xml");
+                Group group = stageBuilder.buildGroup("listwidget/list_item_icon.xml");
                 updateActor(position, group);
                 return group;
             } catch (Exception e) {
@@ -39,13 +38,9 @@ public class ComplextListAdapter extends ListWidgetAdapter<ListItem> {
     }
 
     private void updateActor(final int position, Group group) {
-        Label nameLabel = group.findActor("name");
-        Label chipsLabel = group.findActor("chips");
         ListItem item = items.get(position);
-        nameLabel.setText(item.getName());
-        chipsLabel.setText(item.getChips() + "");
-
         Image logo = group.findActor("logo");
+        group.setName(item.getFrame());
         Drawable drawable = drawableCache.get(item.getFrame());
         if (drawable == null) {
             TextureAtlas.AtlasRegion atlasRegion = stageBuilder.getAssets().getTextureAtlas("common.atlas").findRegion(item.getFrame());
@@ -64,5 +59,11 @@ public class ComplextListAdapter extends ListWidgetAdapter<ListItem> {
 
     @Override
     public void actorRemoved(Actor actor) {
+    }
+
+    public void removeBottomActor() {
+        if(!this.items.isEmpty()){
+            this.items.remove(items.size()-1);
+        }
     }
 }
