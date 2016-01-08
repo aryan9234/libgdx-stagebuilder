@@ -44,7 +44,6 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     private boolean needsLayout = false;
     private boolean resetPosition = true;
     private final Vector2 lastDragPoint = new Vector2();
-    private Vector2 gameAreaPosition;
     private boolean allActorsVisible = true;
     private List<Actor> recycledActors = new ArrayList<Actor>();
     private ListWidgetState state = ListWidgetState.STEADY;
@@ -73,7 +72,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     };
 
     private enum ListWidgetState {
-        STEADY, SETTLE_HEAD, SETTLE_TAIL, FLINGING, DRAGGING, DRAG_BACKWARDS_BLOCKED, DRAG_FORWARDS_BLOCKED
+        STEADY, SETTLE_HEAD, SETTLE_TAIL, FLINGING, DRAG_BACKWARDS_BLOCKED, DRAG_FORWARDS_BLOCKED
     }
 
     private enum DragDirection {
@@ -94,7 +93,6 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             /* head padding only available for horizontal lists for now */
             this.headPadding = Float.valueOf(attributes.get("headPadding")) * positionMultiplier;
         }
-        this.gameAreaPosition = resolutionHelper.getGameAreaPosition();
         this.drawDebug = Boolean.valueOf(attributes.get("debug"));
         if (this.drawDebug) {
             this.debugRenderer = new ShapeRenderer();
@@ -430,7 +428,6 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             }
 
             lastDragPoint.set(x, y);
-            state = ListWidgetState.DRAGGING;
 
             if (checkDragBlocked(dragDirection)) {
                 if (dragDirection == DragDirection.BACKWARD) {
