@@ -137,9 +137,8 @@ public class ListWidgetScreen extends DemoScreen {
         findButton("removeBotHorizontalItem").addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.addScreen(new ButtonScreen(game));
-                //horizontalListAdapter.removeBottomActor();
-                //horizontalListAdapter.notifyDataSetChanged(false);
+                horizontalListAdapter.removeBottomActor();
+                horizontalListAdapter.notifyDataSetChanged(false);
             }
         });
 

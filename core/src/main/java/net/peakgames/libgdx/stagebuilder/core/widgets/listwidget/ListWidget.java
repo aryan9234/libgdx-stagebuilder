@@ -89,7 +89,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     @Override
     public void build(Map<String, String> attributes, AssetsInterface assetsInterface, ResolutionHelper resolutionHelper, LocalizationService localizationService) {
         float positionMultiplier = resolutionHelper.getPositionMultiplier();
-        this.isVertical = "vertical".equals(String.valueOf(attributes.get("orientation")));
+        this.isVertical = !("horizontal".equals(String.valueOf(attributes.get("orientation"))));
         if (!isVertical && attributes.containsKey("headPadding")) {
             /* head padding only available for horizontal lists for now */
             this.headPadding = Float.valueOf(attributes.get("headPadding")) * positionMultiplier;
@@ -184,7 +184,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         int to = Math.max(tailActorIndex + 1, listAdapter.getCount());
         
         for (int i=from; i<to; i++) {
-            if (isActorEmpty(lastActor) || (i > tailActorIndex && (isVertical ? getActorPos(lastActor) > 0 : getActorOrigin(lastActor) < measure))) {
+            if (isActorEmpty(lastActor) || (i > tailActorIndex && (isVertical ? getActorOrigin(lastActor) > 0 : getActorPos(lastActor) < measure))) {
                 addItemAfterTail();
                 Actor tailActor = getTailActor(); //actor that is added in previous line
                 if (isVertical ? getActorPos(tailActor) >= 0 : getActorOrigin(tailActor) >= measure) { 
@@ -566,7 +566,11 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 return;
             }
             newActor.setUserObject(maxIndex + 1);
-            setActorPos(newActor, isVertical ? getActorPos(addAfterActor) - getActorMeasure(newActor) : getActorOrigin(addAfterActor));
+            if (isActorEmpty(addAfterActor)) {
+                setActorPos(newActor, isVertical ? measure - getActorMeasure(newActor) : headPadding);   
+            } else {
+                setActorPos(newActor, isVertical ? getActorPos(addAfterActor) - getActorMeasure(newActor) : getActorOrigin(addAfterActor));
+            }
             removeActor(actor);
             listAdapter.actorRemoved(actor);
             addActor(newActor);
