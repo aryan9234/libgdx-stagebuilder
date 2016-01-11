@@ -320,8 +320,10 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 moveAmount = isVertical ? measure - getActorOrigin(firstItemActor) : getActorPos(firstItemActor) - headPadding;
                 state = ListWidgetState.STEADY;
             }
+            moveChildrenBy(isVertical ? moveAmount : -moveAmount);
+        } else {
+            state = ListWidgetState.STEADY;
         }
-        moveChildrenBy(isVertical ? moveAmount : -moveAmount);
     }
 
     private void handleSettleTail(float delta) {
