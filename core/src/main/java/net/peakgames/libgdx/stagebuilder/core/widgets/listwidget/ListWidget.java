@@ -183,6 +183,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         
         for (int i=from; i<to; i++) {
             if (isActorEmpty(lastActor) || (i > tailActorIndex && (isVertical ? getActorOrigin(lastActor) > 0 : getActorPos(lastActor) < measure))) {
+                findRecycledActors();
                 addItemAfterTail();
                 Actor tailActor = getTailActor(); //actor that is added in previous line
                 if (isVertical ? getActorPos(tailActor) >= 0 : getActorOrigin(tailActor) >= measure) { 
@@ -528,52 +529,52 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
     
     private void addItemBeforeHead () {
-        for (Actor actor : recycledActors) {
-            Actor addBeforeActor = getHeadActor();
-            
-            int minIndex = getActorIndex(addBeforeActor);
-            if (minIndex == 0) {
-                break;
-            }
-            Actor newActor = guardedGetActor(minIndex - 1, actor);
-            if (newActor == null) {
-                return;
-            }
-            newActor.setUserObject(minIndex - 1);
-            setActorPos(newActor, isVertical ? getActorOrigin(addBeforeActor) : getActorPos(addBeforeActor) - getActorMeasure(addBeforeActor));
-            removeActor(actor);
-            listAdapter.actorRemoved(actor);
-            addActor(newActor);
+        Actor recycledActor = recycledActors.isEmpty() ? null : recycledActors.remove(0);
+        Actor addBeforeActor = getHeadActor();
+        
+        int minIndex = getActorIndex(addBeforeActor);
+        if (minIndex == 0) {
+            return;
         }
+        Actor newActor = guardedGetActor(minIndex - 1, recycledActor);
+        if (newActor == null) {
+            return;
+        }
+        newActor.setUserObject(minIndex - 1);
+        setActorPos(newActor, isVertical ? getActorOrigin(addBeforeActor) : getActorPos(addBeforeActor) - getActorMeasure(addBeforeActor));
+        
+        if (recycledActor != null) {
+            removeActor(recycledActor);
+            listAdapter.actorRemoved(recycledActor);
+        }
+        addActor(newActor);
     }
     
     private void addItemAfterTail () {
-        if (recycledActors.isEmpty()) {
-            addActorToListWidget(listAdapter.getCount()-1, listAdapter.getCount()-1);
+        Actor recycledActor = recycledActors.isEmpty() ? null : recycledActors.remove(0);
+        Actor addAfterActor = getTailActor();
+
+        int maxIndex = getActorIndex(addAfterActor);
+        if (maxIndex >= listAdapter.getCount() - 1) {
             return;
         }
-        
-        for (Actor actor : recycledActors) {
-            Actor addAfterActor = getTailActor();
-
-            int maxIndex = getActorIndex(addAfterActor);
-            if (maxIndex >= listAdapter.getCount() - 1) {
-                break;
-            }
-            Actor newActor = guardedGetActor(maxIndex + 1, actor);
-            if (newActor == null) {
-                return;
-            }
-            newActor.setUserObject(maxIndex + 1);
-            if (isActorEmpty(addAfterActor)) {
-                setActorPos(newActor, isVertical ? measure - getActorMeasure(newActor) : headPadding);   
-            } else {
-                setActorPos(newActor, isVertical ? getActorPos(addAfterActor) - getActorMeasure(newActor) : getActorOrigin(addAfterActor));
-            }
-            removeActor(actor);
-            listAdapter.actorRemoved(actor);
-            addActor(newActor);
+        Actor newActor = guardedGetActor(maxIndex + 1, recycledActor);
+        if (newActor == null) {
+            return;
         }
+        newActor.setUserObject(maxIndex + 1);
+        if (isActorEmpty(addAfterActor)) {
+            setActorPos(newActor, isVertical ? measure - getActorMeasure(newActor) : headPadding);
+        } else {
+            setActorPos(newActor, isVertical ? getActorPos(addAfterActor) - getActorMeasure(newActor) : getActorOrigin(addAfterActor));
+        }
+        
+        if (recycledActor != null) {
+            removeActor(recycledActor);
+            listAdapter.actorRemoved(recycledActor);
+        }
+        
+        addActor(newActor);
     }
     
     private Actor guardedGetActor(int position, Actor reusable) {
@@ -614,6 +615,19 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             }
         }
     }
+    
+    private void findRecycledActors () {
+        recycledActors.clear();
+        SnapshotArray<Actor> children = getChildren();
+        int size = children.size;
+        for(int i=0; i<size; i++) {
+            Actor actor =  children.get(i);
+            boolean isOut = getActorPos(actor) > measure || getActorOrigin(actor) < 0;
+            if (!isActorEmpty(actor) && isOut) {
+                recycledActors.add(actor);
+            }
+        }
+    }
 
     private Actor addActorToListWidget(final int listAdapterIndex, int actorIndex) {
         final Actor actor = guardedGetActor(actorIndex, null);
@@ -632,6 +646,11 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             if(itemIndex >= listAdapterIndex) {
                 break;
             }
+            
+            if (isVertical ? getActorPos(previousActor) >= measure : getActorOrigin(previousActor) <= 0) {
+                continue;
+            }
+            
             totalMeasureOfPreviousActors += getActorMeasure(previousActor);
             itemIndex++;
         }

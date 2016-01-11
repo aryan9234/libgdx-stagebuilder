@@ -66,4 +66,14 @@ public class HorizontalListAdapter extends ListWidgetAdapter<ListItem> {
             this.items.remove(items.size()-1);
         }
     }
+    
+    public void addItemToTop (ListItem item) {
+        this.items.add(0, item);
+    }
+    
+    public void addItemAt (ListItem item, int pos) {
+        if (pos < 0) pos = 0;
+        else if (pos >= items.size()) pos = items.size()-1;
+        this.items.add(pos, item);
+    }
 }
