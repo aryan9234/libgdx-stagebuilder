@@ -781,4 +781,20 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     public void setDefaultSettleVelocity(float defaultSettleVelocity) {
         this.defaultSettleVelocity = defaultSettleVelocity;
     }
+
+    @Override
+    public void setWidth(float width) {
+        super.setWidth(width);
+        if (!isVertical) {
+            measure = width;
+        }
+    }
+
+    @Override
+    public void setHeight(float height) {
+        super.setHeight(height);
+        if (isVertical) {
+            measure = height;
+        }
+    }
 }
