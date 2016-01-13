@@ -6,7 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import net.peakgames.libgdx.stagebuilder.core.AbstractGame;
-import net.peakgames.libgdx.stagebuilder.core.demo.widgets.listwidget.ComplextListAdapter;
+import net.peakgames.libgdx.stagebuilder.core.demo.widgets.listwidget.ComplexListAdapter;
+import net.peakgames.libgdx.stagebuilder.core.demo.widgets.listwidget.HorizontalListAdapter;
 import net.peakgames.libgdx.stagebuilder.core.demo.widgets.listwidget.LabelListAdapter;
 import net.peakgames.libgdx.stagebuilder.core.demo.widgets.listwidget.ListItem;
 import net.peakgames.libgdx.stagebuilder.core.widgets.listwidget.ListWidget;
@@ -39,7 +40,7 @@ public class ListWidgetScreen extends DemoScreen {
             @Override
             public void onItemClicked(Object item, Actor view, int position) {
                 listAdapter.removeActorAt(position);
-                listAdapter.notifyDataSetChanged();
+                listAdapter.notifyDataSetChanged(false);
             }
         });
 
@@ -48,7 +49,7 @@ public class ListWidgetScreen extends DemoScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listAdapter.addItem("test " + System.currentTimeMillis());
-                listAdapter.notifyDataSetChanged();
+                listAdapter.notifyDataSetChanged(false);
             }
         });
 
@@ -56,7 +57,7 @@ public class ListWidgetScreen extends DemoScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listAdapter.removeTopActor();
-                listAdapter.notifyDataSetChanged();
+                listAdapter.notifyDataSetChanged(false);
             }
         });
 
@@ -64,34 +65,34 @@ public class ListWidgetScreen extends DemoScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 listAdapter.removeBottomActor();
-                listAdapter.notifyDataSetChanged();
+                listAdapter.notifyDataSetChanged(false);
             }
         });
 
         final ListWidget complexListWidget = (ListWidget) findActor("complex_list_widget");
-        final ComplextListAdapter complextListAdapter = new ComplextListAdapter(getStageBuilder());
+        final ComplexListAdapter complexListAdapter = new ComplexListAdapter(getStageBuilder());
 
         final List<ListItem> complexItemList = new ArrayList<ListItem>();
         for (int i = 0; i < 20; i++) {
             complexItemList.add(ListItem.generateRandom());
 
         }
-        complextListAdapter.initialize(complexItemList);
-        complexListWidget.setListAdapter(complextListAdapter);
+        complexListAdapter.initialize(complexItemList);
+        complexListWidget.setListAdapter(complexListAdapter);
 
         findButton("addComplexItemButton").addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                complextListAdapter.addItem(ListItem.generateRandom());
-                complextListAdapter.notifyDataSetChanged();
+                complexListAdapter.addItem(ListItem.generateRandom());
+                complexListAdapter.notifyDataSetChanged(false);
             }
         });
 
         findButton("removeComplexItemButton").addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                complextListAdapter.removeTopActor();
-                complextListAdapter.notifyDataSetChanged();
+                complexListAdapter.removeTopActor();
+                complexListAdapter.notifyDataSetChanged(false);
             }
         });
 
@@ -99,7 +100,7 @@ public class ListWidgetScreen extends DemoScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 complexItemList.clear();
-                complextListAdapter.notifyDataSetChanged();
+                complexListAdapter.notifyDataSetChanged(false);
             }
         });
 
@@ -107,6 +108,45 @@ public class ListWidgetScreen extends DemoScreen {
             @Override
             public void onItemClicked(Object item, Actor view, int position) {
                 Gdx.app.log(TAG, item + " clicked postion : " + position + " actor " + view);
+            }
+        });
+        
+        addHorizontalList();
+    }
+
+    private void addHorizontalList() {
+        final ListWidget horizontalListWidget = (ListWidget) findActor("horizontal_list_widget");
+        final HorizontalListAdapter horizontalListAdapter = new HorizontalListAdapter(getStageBuilder());
+
+        final List<ListItem> horizontalListItems = new ArrayList<ListItem>();
+        for (int i = 0; i < 20; i++) {
+            horizontalListItems.add(ListItem.generateRandom());
+
+        }
+        horizontalListAdapter.initialize(horizontalListItems);
+        horizontalListWidget.setListAdapter(horizontalListAdapter);
+
+        findButton("removeTopHorizontalItem").addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                horizontalListAdapter.removeTopActor();
+                horizontalListAdapter.notifyDataSetChanged(false);
+            }
+        });
+
+        findButton("removeBotHorizontalItem").addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                horizontalListAdapter.removeBottomActor();
+                horizontalListAdapter.notifyDataSetChanged(false);
+            }
+        });
+
+        findButton("addHorizontalItem").addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                horizontalListAdapter.addItem(ListItem.generateRandom());
+                horizontalListAdapter.notifyDataSetChanged(false);
             }
         });
     }

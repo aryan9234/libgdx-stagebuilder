@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<group width="120" height="120">
+    <image name="logo" width="120" height="120" atlas="common.atlas" frame="facebook_logo" />
+</group>
