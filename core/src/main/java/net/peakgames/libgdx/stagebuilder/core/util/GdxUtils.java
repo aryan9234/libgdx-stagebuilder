@@ -1,5 +1,6 @@
 package net.peakgames.libgdx.stagebuilder.core.util;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -72,5 +73,13 @@ public class GdxUtils {
     public static float getTextHeight(String text, BitmapFont font) {
         glyphLayout.setText(font, text);
         return glyphLayout.height;
+    }
+
+    public static void setLineHeight(Label label, float height) {
+        BitmapFont font = label.getStyle().font;
+        BitmapFont.BitmapFontData copiedData = new BitmapFont.BitmapFontData(font.getData().fontFile, font.getData().flipped);
+        copiedData.setLineHeight(height);
+        Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(copiedData, font.getRegion(), true), new Color(font.getColor()));
+        label.setStyle(style);
     }
 }
