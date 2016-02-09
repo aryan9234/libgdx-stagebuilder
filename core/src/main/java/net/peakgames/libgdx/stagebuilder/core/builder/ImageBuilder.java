@@ -1,6 +1,5 @@
 package net.peakgames.libgdx.stagebuilder.core.builder;
 
-import android.util.Log;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -85,6 +84,10 @@ public class ImageBuilder extends ActorBuilder {
             if(imageModel.getMinFilter() != null && imageModel.getMagFilter() != null) {
                 textureRegion.getTexture().setFilter(Texture.TextureFilter.valueOf(imageModel.getMinFilter()), Texture.TextureFilter.valueOf(imageModel.getMagFilter()));
             }
+            if (imageModel.isFlipX() || imageModel.isFlipY()) {
+                textureRegion = new TextureRegion(textureRegion);
+                textureRegion.flip(imageModel.isFlipX(), imageModel.isFlipY());
+            }
             return new Image(textureRegion);
         }
     }
@@ -101,6 +104,10 @@ public class ImageBuilder extends ActorBuilder {
 
         }else{
             TextureAtlas.AtlasRegion atlasRegion = textureAtlas.findRegion(getLocalizedString(imageModel.getFrame()));
+            if (imageModel.isFlipX() || imageModel.isFlipY()) {
+                atlasRegion = new TextureAtlas.AtlasRegion(atlasRegion);
+                atlasRegion.flip(imageModel.isFlipX(), imageModel.isFlipY());
+            }
             return new Image(atlasRegion);
         }
     }

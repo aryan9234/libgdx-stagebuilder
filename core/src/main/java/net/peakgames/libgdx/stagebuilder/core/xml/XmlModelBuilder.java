@@ -143,6 +143,8 @@ public class XmlModelBuilder {
         image.setNinepatchOffsetBottom(XmlHelper.readIntAttribute(xmlParser, "npBottom", 0));
         image.setMinFilter(XmlHelper.readStringAttribute(xmlParser, "minFilter"));
         image.setMagFilter(XmlHelper.readStringAttribute(xmlParser, "magFilter"));
+        image.setFlipX(XmlHelper.readBooleanAttribute(xmlParser, "flipX", false));
+        image.setFlipY(XmlHelper.readBooleanAttribute(xmlParser, "flipY", false));
         return image;
     }
 
