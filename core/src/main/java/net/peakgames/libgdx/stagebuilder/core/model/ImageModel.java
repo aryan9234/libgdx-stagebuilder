@@ -23,6 +23,9 @@ public class ImageModel extends BaseModel {
 
     private String minFilter;
     private String magFilter;
+    
+    private boolean flipX;
+    private boolean flipY;
 
     public String getAtlasName() {
         return atlasName;
@@ -110,6 +113,22 @@ public class ImageModel extends BaseModel {
 
     public String getMagFilter() {
         return magFilter;
+    }
+
+    public boolean isFlipX() {
+        return flipX;
+    }
+
+    public void setFlipX(boolean flipX) {
+        this.flipX = flipX;
+    }
+
+    public boolean isFlipY() {
+        return flipY;
+    }
+
+    public void setFlipY(boolean flipY) {
+        this.flipY = flipY;
     }
 
     @Override
