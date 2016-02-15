@@ -10,6 +10,10 @@ import java.io.InputStream;
 
 public class XmlHelper {
 
+    private XmlHelper() {
+        
+    }
+    
 	public static float readFloatAttribute(XmlPullParser parser, String attributeName, float defaultValue) {
 		String sValue = parser.getAttributeValue(null, attributeName);
 		if (sValue == null) {

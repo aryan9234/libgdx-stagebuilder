@@ -7,6 +7,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Utils {
+    
+    private Utils() {
+        
+    }
+    
 	public static boolean checkMD5(String md5, InputStream is) {
 		if (md5 == null || md5.equals("") || is == null) {
 			return false;
