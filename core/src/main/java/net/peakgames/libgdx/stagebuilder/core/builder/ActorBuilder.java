@@ -126,13 +126,13 @@ public abstract class ActorBuilder {
 
     private void setTouchable(Actor actor, BaseModel model) {
         switch (model.getTouchable()) {
-            case enabled:
+            case ENABLED:
                 actor.setTouchable(Touchable.enabled);
                 break;
-            case disabled:
+            case DISABLED:
                 actor.setTouchable(Touchable.disabled);
                 break;
-            case childrenOnly:
+            case CHILDEREN_ONLY:
                 actor.setTouchable(Touchable.childrenOnly);
                 break;
             default:
@@ -149,14 +149,14 @@ public abstract class ActorBuilder {
         float x = 0;
         float y = 0;
 
-        if (screenAlign == BaseModel.ScreenAlign.top || screenAlign == BaseModel.ScreenAlign.bottom) {
+        if (screenAlign == BaseModel.ScreenAlign.TOP || screenAlign == BaseModel.ScreenAlign.BOTTOM) {
             y = calculateScreenPosition(screenAlign, model).y;
         }
         else {
             x = calculateScreenPosition(screenAlign, model).x;
         }
 
-        if (screenAlignSupport == BaseModel.ScreenAlign.top || screenAlignSupport == BaseModel.ScreenAlign.bottom) {
+        if (screenAlignSupport == BaseModel.ScreenAlign.TOP || screenAlignSupport == BaseModel.ScreenAlign.BOTTOM) {
             y = calculateScreenPosition(screenAlignSupport, model).y;
         }
         else {
@@ -174,22 +174,22 @@ public abstract class ActorBuilder {
         float x = model.getX() * resolutionHelper.getPositionMultiplier();
 
         switch (screenAlign) {
-            case top:
+            case TOP:
                 //after building all actors stage position will be set to gameAreaPosition.
                 y = resolutionHelper.getScreenHeight() - model.getScaledHeight() - resolutionHelper.getGameAreaPosition().y;
                 y = y - model.getScreenPaddingTop() * resolutionHelper.getPositionMultiplier();
                 break;
-            case bottom:
+            case BOTTOM:
                 y = -resolutionHelper.getGameAreaPosition().y;
                 y = y + model.getScreenPaddingBottom() * resolutionHelper.getPositionMultiplier();
                 break;
 
-            case left:
+            case LEFT:
                 x = -resolutionHelper.getGameAreaPosition().x;
                 x = x + model.getScreenPaddingLeft() * resolutionHelper.getPositionMultiplier();
                 break;
 
-            case right:
+            case RIGHT:
                 x = resolutionHelper.getScreenWidth() - model.getScaledWidth() - resolutionHelper.getGameAreaPosition().x;
                 x = x - model.getScreenPaddingRight() * resolutionHelper.getPositionMultiplier();
                 break;

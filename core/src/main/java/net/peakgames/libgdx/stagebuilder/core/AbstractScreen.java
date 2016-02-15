@@ -24,7 +24,7 @@ import java.util.Map;
 public abstract class AbstractScreen implements Screen {
 
 	public static final long SCREEN_REFRESH_CHECK_PERIOD_MS = 1000;
-    private static final boolean keepAspectRatio = true;
+    private static final boolean KEEP_ASPECT_RATIO = true;
     private static final String PORTRAIT_SUFFIX = "_portrait";
     private static final String LANDSCAPE_SUFFIX = "_landscape";
     public final String TAG = getClass().getSimpleName();
@@ -79,7 +79,7 @@ public abstract class AbstractScreen implements Screen {
         float height = game.getHeight();
 
         stageBuilder = new StageBuilder(game.getAssetsInterface(), game.getResolutionHelper(), game.getLocalizationService());
-        stage = stageBuilder.build(getFileName(), width, height, keepAspectRatio);
+        stage = stageBuilder.build(getFileName(), width, height, KEEP_ASPECT_RATIO);
 
         Gdx.input.setInputProcessor(this.stage);
     }
