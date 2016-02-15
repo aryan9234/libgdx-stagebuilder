@@ -115,12 +115,12 @@ public class ProgressBarWidget extends WidgetGroup implements ICustomWidget {
         this.atlasName = attributeMap.get("atlas");
         this.backgroundImageFrame = attributeMap.get("bgImageFrame");
         this.progressImageFrame = attributeMap.get("progressImageFrame");
-        this.ninePatchLeft = Integer.valueOf(attributeMap.get("ninePatchLeft"));
-        this.ninePatchRight = Integer.valueOf(attributeMap.get("ninePatchRight"));
-        this.progressImagePaddingLeft = Float.valueOf(attributeMap.get("progressImagePaddingLeft")) * sizeMult;
-        this.progressImagePaddingRight = Float.valueOf(attributeMap.get("progressImagePaddingRight")) * sizeMult;
+        this.ninePatchLeft = Integer.parseInt(attributeMap.get("ninePatchLeft"));
+        this.ninePatchRight = Integer.parseInt(attributeMap.get("ninePatchRight"));
+        this.progressImagePaddingLeft = Float.parseFloat(attributeMap.get("progressImagePaddingLeft")) * sizeMult;
+        this.progressImagePaddingRight = Float.parseFloat(attributeMap.get("progressImagePaddingRight")) * sizeMult;
         this.text = attributeMap.get("text");
-        this.completeDuration = Float.valueOf(attributeMap.get("duration"));
+        this.completeDuration = Float.parseFloat(attributeMap.get("duration"));
         this.fontName = attributeMap.get("fontName");
     }
 
