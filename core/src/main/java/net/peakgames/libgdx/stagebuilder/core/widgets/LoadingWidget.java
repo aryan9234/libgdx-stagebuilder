@@ -168,10 +168,8 @@ public class LoadingWidget extends WidgetGroup implements ICustomWidget{
 				this.messageLabel.draw(batch, parentAlpha);
 			}
 		}
-		if (timeOutDuration > 0) {
-			if (this.showTime + this.timeOutDuration < System.currentTimeMillis()) {
-				this.hide();
-			}
+		if (timeOutDuration > 0 && this.showTime + this.timeOutDuration < System.currentTimeMillis()) {
+		    this.hide();
 		}
 	}
 
