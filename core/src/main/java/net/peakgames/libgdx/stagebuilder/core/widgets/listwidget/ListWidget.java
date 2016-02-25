@@ -312,7 +312,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
 
     private void handleSettleHead(float delta) {
-        float moveAmount = (delta * defaultSettleVelocity);
+        float moveAmount = delta * defaultSettleVelocity;
         Actor firstItemActor = getChildWithUserObject(0);
         if (isActorNotEmpty(firstItemActor)) {
             boolean isSteady = isVertical ? getActorOrigin(firstItemActor) + moveAmount >= measure : 
@@ -328,7 +328,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
 
     private void handleSettleTail(float delta) {
-        float moveAmount = (delta * defaultSettleVelocity);
+        float moveAmount = delta * defaultSettleVelocity;
         Actor lastActor = getTailActor();
         boolean isSteady = isVertical ? getActorPos(lastActor) - moveAmount <= 0 : 
                 moveAmount + getActorOrigin(lastActor) >= measure;
@@ -346,7 +346,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
 
     private boolean isNotTouchInBorders(float pos) {
-        return (pos > measure || pos < 0);
+        return pos > measure || pos < 0;
     }
 
     private class ListWidgetTouchListener extends InputListener {
@@ -732,10 +732,8 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         int count = children.size;
         for (int i = 0; i < count; i++) {
             Actor child = children.get(i);
-            if (child.getUserObject() != null) {
-                if (index == (Integer)child.getUserObject()) {
-                    return child;
-                }
+            if (child.getUserObject() != null && index == (Integer)child.getUserObject()) {
+                return child;
             }
         }
         return EMPTY_ACTOR;
