@@ -15,7 +15,7 @@ public class XmlHelper {
 		if (sValue == null) {
 			return defaultValue;
 		}
-		return Float.valueOf(sValue);
+		return Float.parseFloat(sValue);
 	}
 
 	public static int readIntAttribute(XmlPullParser parser, String attributeName, int defaultValue) {
@@ -23,7 +23,7 @@ public class XmlHelper {
 		if (sValue == null) {
 			return defaultValue;
 		}
-		return Integer.valueOf(sValue);
+		return Integer.parseInt(sValue);
 	}
 
 	public static String readStringAttribute(XmlPullParser parser, String attributeName) {
