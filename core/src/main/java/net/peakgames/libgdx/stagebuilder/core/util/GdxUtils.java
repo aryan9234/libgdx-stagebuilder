@@ -8,6 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class GdxUtils {
 
+    private GdxUtils() {
+        
+    }
+    
     private static GlyphLayout glyphLayout = new GlyphLayout();
 
     public static String trim( String text, float width, BitmapFont font){

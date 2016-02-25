@@ -74,7 +74,8 @@ public class Assets implements AssetsInterface {
 
     @Override
     public void unloadAssets(String key) {
-        this.assetLoader.unloadAssets(key, Collections.EMPTY_SET);
+        Set<String> emptySet = Collections.emptySet();
+        this.assetLoader.unloadAssets(key, emptySet);
     }
 
     @Override

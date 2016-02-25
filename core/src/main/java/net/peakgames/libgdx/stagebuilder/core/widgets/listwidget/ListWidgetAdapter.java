@@ -11,7 +11,7 @@ import java.util.List;
  */
 public abstract class ListWidgetAdapter<T> implements IListWidgetAdapter<T> {
 
-    protected List<T> items = Collections.EMPTY_LIST;
+    protected List<T> items = Collections.emptyList();
     protected ListWidgetDataSetChangeListener dataSetChangeListener;
     protected StageBuilder stageBuilder;
 
