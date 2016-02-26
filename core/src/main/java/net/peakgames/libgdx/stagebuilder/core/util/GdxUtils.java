@@ -3,6 +3,7 @@ package net.peakgames.libgdx.stagebuilder.core.util;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
@@ -85,5 +86,17 @@ public class GdxUtils {
         copiedData.setLineHeight(height);
         Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(copiedData, font.getRegion(), true), new Color(font.getColor()));
         label.setStyle(style);
+    }
+
+    public static Label findAndSetLabelText(Group root, String name, String text) {
+        return findAndSetLabelText(root, name, text, false);
+    }
+    
+    public static Label findAndSetLabelText(Group root, String name, String text, boolean autoScale) {
+        final Label label = root.findActor(name);
+        if (label == null) return null;
+        label.setText(text);
+        if (autoScale) GdxUtils.autoScaleLabel(label);
+        return label;
     }
 }
