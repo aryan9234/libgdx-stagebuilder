@@ -260,7 +260,7 @@ public abstract class BaseModel {
 
     public void setTouchable(String value) {
         if (value != null) {
-            this.touchable = Touchable.valueOf(value.toUpperCase());
+            this.touchable = Touchable.valueOf(value.toUpperCase(Locale.ENGLISH));
         }
     }
 
