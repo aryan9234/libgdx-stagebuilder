@@ -359,7 +359,7 @@ public class XmlModelBuilder {
         model.setScreenPaddingBottom(XmlHelper.readFloatAttribute(xmlParser, "screenPaddingBottom", 0.0f));
         model.setScreenPaddingLeft(XmlHelper.readFloatAttribute(xmlParser, "screenPaddingLeft", 0.0f));
         model.setScreenPaddingRight(XmlHelper.readFloatAttribute(xmlParser, "screenPaddingRight", 0.0f));
-        model.setTouchable(XmlHelper.readStringAttribute(xmlParser, "touchable", "enabled"));
+        model.setTouchable(XmlHelper.readStringAttribute(xmlParser, "touchable", BaseModel.Touchable.DISABLED.name()));
     }
 
 }
