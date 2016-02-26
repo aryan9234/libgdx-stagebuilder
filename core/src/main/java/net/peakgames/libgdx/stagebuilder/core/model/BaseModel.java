@@ -6,11 +6,11 @@ import java.util.Locale;
 public abstract class BaseModel {
 
     public enum ScreenAlign {
-        top, bottom, left, right
+        TOP, BOTTOM, LEFT, RIGHT
     }
 
     public enum Touchable {
-        enabled, disabled, childrenOnly
+        ENABLED, DISABLED, CHILDEREN_ONLY
     }
 
     private String name;
@@ -50,7 +50,7 @@ public abstract class BaseModel {
      * enabled, disabled, childrenOnly
      * default value enabled
      */
-    private Touchable touchable = Touchable.enabled;
+    private Touchable touchable = Touchable.ENABLED;
 
 
     @Override

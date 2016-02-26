@@ -28,20 +28,20 @@ public class ActorBuilderTest {
 
         ImageBuilder imageBuilder = new ImageBuilder(assetsInterface, resolutionHelper, localizationService);
 
-        Vector2 position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.top, model);
+        Vector2 position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.TOP, model);
         assertEquals(100.0f, position.x);
         assertEquals(440.0f, position.y);
 
-        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.bottom, model);
+        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.BOTTOM, model);
         assertEquals(100.0f, position.x);
         assertEquals(-10.0f, position.y);
 
         model.setY(150);
-        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.right, model);
+        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.RIGHT, model);
         assertEquals(600f, position.x);
         assertEquals(150.0f, position.y);
 
-        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.left, model);
+        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.LEFT, model);
         assertEquals(0.0f, Math.abs(position.x));
         assertEquals(150.0f, position.y);
     }
@@ -57,21 +57,21 @@ public class ActorBuilderTest {
 
         ImageBuilder imageBuilder = new ImageBuilder(assetsInterface, resolutionHelper, localizationService);
 
-        Vector2 position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.top, model);
+        Vector2 position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.TOP, model);
         assertEquals(100.0f, position.x);
         assertEquals(430.0f, position.y);
 
-        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.bottom, model);
+        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.BOTTOM, model);
         assertEquals(100.0f, position.x);
         assertEquals(0.0f, Math.abs(position.y));
 
         model.setY(150);
 
-        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.right, model);
+        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.RIGHT, model);
         assertEquals(650f, position.x);
         assertEquals(150.0f, position.y);
 
-        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.left, model);
+        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.LEFT, model);
         assertEquals(-50.0f, position.x);
         assertEquals(150.0f, position.y);
     }
@@ -89,24 +89,24 @@ public class ActorBuilderTest {
 
         ImageBuilder imageBuilder = new ImageBuilder(assetsInterface, resolutionHelper, localizationService);
 
-        Vector2 position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.top, model);
+        Vector2 position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.TOP, model);
         assertEquals(100.0f, position.x);
         assertEquals(400.0f, position.y);
 
         model.setScreenPaddingBottom(40);
-        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.bottom, model);
+        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.BOTTOM, model);
         assertEquals(100.0f, position.x);
         assertEquals(40.0f, Math.abs(position.y));
 
         model.setY(150);
         model.setScreenPaddingRight(20);
 
-        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.right, model);
+        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.RIGHT, model);
         assertEquals(630f, position.x);
         assertEquals(150.0f, position.y);
 
         model.setScreenPaddingLeft(100);
-        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.left, model);
+        position = imageBuilder.calculateScreenPosition(BaseModel.ScreenAlign.LEFT, model);
         assertEquals(50.0f, position.x);
         assertEquals(150.0f, position.y);
 
