@@ -51,6 +51,7 @@ public abstract class BaseModel {
      * default value enabled
      */
     private Touchable touchable = Touchable.ENABLED;
+    private boolean debugEnabled;
 
 
     @Override
@@ -264,6 +265,11 @@ public abstract class BaseModel {
         }
     }
 
+    public void setDebugEnabled(boolean debug) {
+        this.debugEnabled = debug;
+    }
 
-
+    public boolean isDebugEnabled() {
+        return debugEnabled;
+    }
 }
