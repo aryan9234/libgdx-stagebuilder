@@ -214,6 +214,17 @@ public class XmlModelBuilder {
         button.setTextureSrcDown(XmlHelper.readStringAttribute(xmlParser, "textureSrcDown"));
         button.setTextureSrcDisabled(XmlHelper.readStringAttribute(xmlParser, "textureSrcDisabled"));
         button.setTextureSrcChecked( XmlHelper.readStringAttribute( xmlParser, "textureSrcChecked"));
+        
+        button.setTintColorUp( XmlHelper.readStringAttribute( xmlParser, "tintColorUp"));
+        button.setTintColorDown( XmlHelper.readStringAttribute( xmlParser, "tintColorDown"));
+        button.setTintColorDisabled( XmlHelper.readStringAttribute( xmlParser, "tintColorDisabled"));
+        button.setTintColorChecked( XmlHelper.readStringAttribute( xmlParser, "tintColorChecked"));
+
+        button.setNinePatch(XmlHelper.readBooleanAttribute(xmlParser, "ninepatch", false));
+        button.setNpTop(XmlHelper.readIntAttribute(xmlParser, "npTop", 0));
+        button.setNpBottom(XmlHelper.readIntAttribute(xmlParser, "npBottom", 0));
+        button.setNpLeft(XmlHelper.readIntAttribute(xmlParser, "npLeft", 0));
+        button.setNpRight(XmlHelper.readIntAttribute(xmlParser, "npRight", 0));
     }
 
     private BaseModel buildSliderModel( XmlPullParser xmlPullParser){

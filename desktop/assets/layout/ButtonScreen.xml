@@ -1,9 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <group>
     <image name="background_image" atlas="common.atlas" frame="background" type="background"/>
-    <button name="backButton" x="10" y="420" atlas="common.atlas" frameUp="back_button" frameDown="back_buttonH"/>
-    <textbutton name="x" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="270" y="40"  width="250" text="Click Me 0.4" fontName="default_font.fnt" fontColor="000000" fontScale="0.4"/>
-    <textbutton name="x" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="270" y="100" width="250" text="Click Me 0.6" fontName="default_font.fnt" fontColor="000000" fontScale="0.6"/>
+    <button name="backButton" x="10" y="420" atlas="common.atlas" frameUp="back_button" frameDown="back_buttonH" tintColorUp="FF0000"/>
+
+    <textbutton name="np" atlas="common.atlas" ninepatch="true" frameUp="textFieldBackground" 
+                frameDown="textFieldBackground" npLeft="8" npRight="8" npTop="8" npBottom="8" 
+                x="20" y="300" width="150" height="80" text="NinePatch\nand Tint" 
+                fontName="default_font.fnt" fontColor="FFFFFF"
+                tintColorUp="0099CC" tintColorDown="26C9FF"/>
+
+    <textbutton name="np" atlas="common.atlas" ninepatch="true" frameUp="textFieldBackground"
+                frameDown="textFieldBackground" npLeft="8" npRight="8" npTop="8" npBottom="8"
+                x="20" y="250" width="47" height="47" text=""
+                fontName="default_font.fnt" fontColor="FFFFFF"
+                tintColorUp="A100D6" tintColorDown="B371C9"/>
+
+    <textbutton name="np" atlas="common.atlas" ninepatch="true" frameUp="textFieldBackground"
+                frameDown="textFieldBackground" npLeft="8" npRight="8" npTop="8" npBottom="8"
+                x="70" y="250" width="47" height="47" text=""
+                fontName="default_font.fnt" fontColor="FFFFFF"
+                tintColorUp="007812" tintColorDown="23DB3F"/>
+
+    <textbutton name="np" atlas="common.atlas" ninepatch="true" frameUp="textFieldBackground"
+                frameDown="textFieldBackground" npLeft="8" npRight="8" npTop="8" npBottom="8"
+                x="120" y="250" width="47" height="47" text=""
+                fontName="default_font.fnt" fontColor="FFFFFF"
+                tintColorUp="555555" tintColorDown="FF0000"/>
+    
+    
+    <textbutton name="x" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="270" y="40"  width="250" text="Click Me 0.4" fontName="default_font.fnt" fontColor="000000" fontScale="0.4" tintColorDown="F0AA0F"/>
+    <textbutton name="x" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="270" y="100" width="250" text="Click Me 0.6" fontName="default_font.fnt" fontColor="000000" fontScale="0.6" tintColorUp="0000BB"/>
     <textbutton name="x" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="270" y="160" width="250" text="Click Me 0.8" fontName="default_font.fnt" fontColor="000000" fontScale="0.8"/>
     <textbutton name="x" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="270" y="220" width="250" text="Click Me 1" fontName="default_font.fnt" fontColor="000000" fontScale="1"/>
     <textbutton name="x" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="270" y="280" width="250" text="Click Me 1.2" fontName="default_font.fnt" fontColor="000000" fontScale="1.2"/>
