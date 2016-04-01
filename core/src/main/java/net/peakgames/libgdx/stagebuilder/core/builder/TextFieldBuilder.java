@@ -77,6 +77,8 @@ public class TextFieldBuilder extends ActorBuilder{
         if(textFieldModel.getHint() != null) textField.setMessageText(getLocalizedString(textFieldModel.getHint()));
         normalizeModelSize(model, model.getWidth(), model.getHeight());
         setBasicProperties(model, textField);
+
+        textField.setAlignment(calculateAlignment(textFieldModel.getAlignment()));
         
         return textField;
     }

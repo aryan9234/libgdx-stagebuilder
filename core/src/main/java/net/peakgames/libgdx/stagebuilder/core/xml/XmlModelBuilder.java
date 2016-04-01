@@ -270,6 +270,7 @@ public class XmlModelBuilder {
         textFieldModel.setRightPadding(XmlHelper.readFloatAttribute(xmlParser, "rightPadding", 0.0f));
         textFieldModel.setTopPadding(XmlHelper.readFloatAttribute(xmlParser, "topPadding", 0.0f));
         textFieldModel.setBottomPadding(XmlHelper.readFloatAttribute(xmlParser, "bottomPadding", 0.0f));
+        textFieldModel.setAlignment(XmlHelper.readStringAttribute(xmlParser, "align"));
     	return textFieldModel;
     }
     private BaseModel buildTextAreaModel(XmlPullParser xmlParser) {
