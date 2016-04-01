@@ -26,6 +26,8 @@ public class ImageModel extends BaseModel {
     
     private boolean flipX;
     private boolean flipY;
+    
+    private String tintColor;
 
     public String getAtlasName() {
         return atlasName;
@@ -154,5 +156,13 @@ public class ImageModel extends BaseModel {
         setNinepatchOffsetRight(ninepatchOffset);
         setNinepatchOffsetTop(ninepatchOffset);
         setNinepatchOffsetBottom(ninepatchOffset);
+    }
+
+    public String getTintColor() {
+        return tintColor;
+    }
+
+    public void setTintColor(String tintColor) {
+        this.tintColor = tintColor;
     }
 }

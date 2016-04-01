@@ -145,6 +145,7 @@ public class XmlModelBuilder {
         image.setMagFilter(XmlHelper.readStringAttribute(xmlParser, "magFilter"));
         image.setFlipX(XmlHelper.readBooleanAttribute(xmlParser, "flipX", false));
         image.setFlipY(XmlHelper.readBooleanAttribute(xmlParser, "flipY", false));
+        image.setTintColor(XmlHelper.readStringAttribute(xmlParser, "tintColor"));
         return image;
     }
 

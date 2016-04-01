@@ -1,18 +1,22 @@
 package net.peakgames.libgdx.stagebuilder.core.builder;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
 import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
 import net.peakgames.libgdx.stagebuilder.core.model.BaseModel;
 import net.peakgames.libgdx.stagebuilder.core.model.ImageModel;
 import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
+import net.peakgames.libgdx.stagebuilder.core.util.NinePatchUtils;
 
 public class ImageBuilder extends ActorBuilder {
 
@@ -78,7 +82,12 @@ public class ImageBuilder extends ActorBuilder {
             if(imageModel.getMinFilter() != null && imageModel.getMagFilter() != null) {
                 patch.getTexture().setFilter(Texture.TextureFilter.valueOf(imageModel.getMinFilter()), Texture.TextureFilter.valueOf(imageModel.getMagFilter()));
             }
-            return new Image(patch);
+            
+            if (imageModel.getTintColor() != null) {
+                ninePatchDrawable = ninePatchDrawable.tint(Color.valueOf(imageModel.getTintColor()));
+            }
+            
+            return new Image(ninePatchDrawable);
         }else{
             TextureRegion textureRegion = new TextureRegion(assets.getTexture(getLocalizedString(imageModel.getTextureSrc())));
             if(imageModel.getMinFilter() != null && imageModel.getMagFilter() != null) {
@@ -88,6 +97,13 @@ public class ImageBuilder extends ActorBuilder {
                 textureRegion = new TextureRegion(textureRegion);
                 textureRegion.flip(imageModel.isFlipX(), imageModel.isFlipY());
             }
+
+            if (imageModel.getTintColor() != null) {
+                SpriteDrawable spriteDrawable = new SpriteDrawable(new Sprite(textureRegion))
+                        .tint(Color.valueOf(imageModel.getTintColor()));
+                return new Image(spriteDrawable);
+            }
+            
             return new Image(textureRegion);
         }
     }
@@ -99,26 +115,31 @@ public class ImageBuilder extends ActorBuilder {
                 imageModel.applyNinepatchValueForAllParts(imageModel.getNinepatchOffset());
             }
             normalizeNinePatchValues(imageModel, textureAtlas);
-            return new Image(createNinePatchDrawable(imageModel.getFrame(), textureAtlas, imageModel.getNinepatchOffsetLeft(),
-                        imageModel.getNinepatchOffsetRight(), imageModel.getNinepatchOffsetTop(), imageModel.getNinepatchOffsetBottom()));
+            NinePatchDrawable npDrawable = NinePatchUtils.createNinePatchDrawableFromAtlas(resolutionHelper, 
+                    imageModel.getFrame(), textureAtlas, imageModel.getNinepatchOffsetLeft(), 
+                    imageModel.getNinepatchOffsetRight(), imageModel.getNinepatchOffsetTop(), 
+                    imageModel.getNinepatchOffsetBottom());
 
+            if (imageModel.getTintColor() != null) {
+                npDrawable = npDrawable.tint(Color.valueOf(imageModel.getTintColor()));
+            }
+            
+            return new Image(npDrawable);
         }else{
             TextureAtlas.AtlasRegion atlasRegion = textureAtlas.findRegion(getLocalizedString(imageModel.getFrame()));
             if (imageModel.isFlipX() || imageModel.isFlipY()) {
                 atlasRegion = new TextureAtlas.AtlasRegion(atlasRegion);
                 atlasRegion.flip(imageModel.isFlipX(), imageModel.isFlipY());
             }
+
+            if (imageModel.getTintColor() != null) {
+                SpriteDrawable spriteDrawable = new SpriteDrawable(new Sprite(atlasRegion))
+                        .tint(Color.valueOf(imageModel.getTintColor()));
+                return new Image(spriteDrawable);
+            }
+            
             return new Image(atlasRegion);
         }
-    }
-
-    private NinePatchDrawable createNinePatchDrawable(String imageName, TextureAtlas textureAtlas ,int patchOffsetLeft, int patchOffsetRight, int patchOffsetTop, int patchOffsetBottom) {
-        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable();
-        TextureAtlas.AtlasRegion region = textureAtlas.findRegion(imageName);
-        NinePatch patch = new NinePatch(region, patchOffsetLeft, patchOffsetRight, patchOffsetTop, patchOffsetBottom);
-        patch.scale(resolutionHelper.getSizeMultiplier(), resolutionHelper.getSizeMultiplier());
-        ninePatchDrawable.setPatch(patch);
-        return ninePatchDrawable;
     }
 
     private void normalizeNinePatchValues(ImageModel imageModel, TextureAtlas textureAtlas) {
