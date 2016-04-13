@@ -1,17 +1,15 @@
 package net.peakgames.libgdx.stagebuilder.core.keyboard;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import android.util.Log;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 public class KeyboardManager implements SoftKeyboardEventListener {
 	
@@ -20,11 +18,11 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 	private Stage stage;
 	private String focusedActorName;
 	private int keyboardHeight;
-	private float initialStageY;
 	private Map<Actor, Float> initialYCoordinateMap;
 	private int screenHeight;
 	private SoftKeyboardEventInterface keyboardEventService;
-	
+	private HashSet<String> ignoreFocusChangeActorsList;
+
 	public KeyboardManager(int screenHeight) {
 		this.screenHeight = screenHeight;
 		this.initialYCoordinateMap = new HashMap<Actor, Float>();
@@ -54,7 +52,6 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 				shiftChildren(rootGroup, stageYDifference);
 			}
 		}
-
 	}
 	
 	private void shiftChildren(Group rootGroup, float stageYDifference) {
@@ -77,6 +74,7 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 			focusedActor = focusedActor.getParent();
 			screenY += focusedActor.getY();
 		}
+
 		return screenY;
 	}
 	
@@ -93,6 +91,8 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 	
 	public void setStage(Stage stage) {
 		this.stage = stage;
+		screenHeight = (int) stage.getHeight();
+		ignoreFocusChangeActorsList = new HashSet<String>();
 		addFocusChangedListenerToStage();
 		initialYCoordinateMap.clear();
 		for(Actor actor : stage.getRoot().getChildren()) {
@@ -111,13 +111,19 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 			}
 		});
 	}
+	
+	public void addIgnoreFocusChangeActor(String actorName) {
+		if (ignoreFocusChangeActorsList != null) {
+			ignoreFocusChangeActorsList.add(actorName);
+		}
+	}
 
 	public void textFieldFocusChanged(final String actorName) {
         if (keyboardEventService != null) {
             keyboardEventService.focusChanged();
         }
 		focusedActorName = actorName;
-		if(isKeyboardOpen()) {
+		if(isKeyboardOpen() && !ignoreFocusChangeActorsList.contains(focusedActorName)) {
 			Actor focusedActor = stage.getRoot().findActor(focusedActorName);
 			updateStagePosition(focusedActor);
 		}
@@ -125,15 +131,18 @@ public class KeyboardManager implements SoftKeyboardEventListener {
 
 	@Override
 	public void softKeyboardOpened(final int keyboardHeight) {
-		this.keyboardOpen = true;
-		this.keyboardHeight = keyboardHeight;
-		if(focusedActorName == null) {
-			return;
+		if (!ignoreFocusChangeActorsList.contains(focusedActorName)) {
+			this.keyboardOpen = true;
+			this.keyboardHeight = keyboardHeight;
+			if(focusedActorName == null) {
+				return;
+			}
+			Actor focusedActor = stage.getRoot().findActor(focusedActorName);
+			if(focusedActor != null) {
+				updateStagePosition(focusedActor);
+			}
 		}
-		Actor focusedActor = stage.getRoot().findActor(focusedActorName);
-		if(focusedActor != null) {			
-			updateStagePosition(focusedActor);
-		} 
+		
 		if(listener != null) {
 			Gdx.app.postRunnable(new Runnable() {
 				@Override
