@@ -805,7 +805,19 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             measure = height;
         }
     }
-    
+
+    @Override
+    public void setSize(float width, float height) {
+        super.setSize(width, height);
+        measure = isVertical ? height : width;
+    }
+
+    @Override
+    public void setBounds(float x, float y, float width, float height) {
+        super.setBounds(x, y, width, height);
+        measure = isVertical ? height : width;
+    }
+
     public boolean replaceChildWith(Actor actorToRemove, Actor actorToInsert) {
         int index = getChildren().indexOf(actorToRemove, false);
         if (index == -1) return false;
