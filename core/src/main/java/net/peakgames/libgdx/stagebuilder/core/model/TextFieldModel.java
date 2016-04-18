@@ -24,6 +24,8 @@ public class TextFieldModel extends ButtonModel {
 	private float rightPadding;
 	private float topPadding;
 	private float bottomPadding;
+	
+	private String alignment;
 
 	public String getText() {
 		return text;
@@ -198,5 +200,13 @@ public class TextFieldModel extends ButtonModel {
 
 	public void setBottomPadding(float bottomPadding) {
 		this.bottomPadding = bottomPadding;
+	}
+
+	public String getAlignment() {
+		return alignment;
+	}
+
+	public void setAlignment(String alignment) {
+		this.alignment = alignment;
 	}
 }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.SnapshotArray;
 import net.peakgames.libgdx.stagebuilder.core.ICustomWidget;
 import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
@@ -60,14 +60,26 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     private float measure;
 
     private OnItemClickedListener onItemClickedListener;
-    private InputListener listItemClickListener = new ClickListener() {
+    private OnItemLongPressedListener onItemLongPressedListener;
+    private ActorGestureListener listItemListener = new ActorGestureListener() {
         @Override
-        public void clicked(InputEvent event, float x, float y) {
+        public void tap(InputEvent event, float x, float y, int count, int button) {
+            super.tap(event, x, y, count, button);
             Actor actor = event.getListenerActor();
             int position = (Integer) actor.getUserObject();
             if (onItemClickedListener != null ) {
                 onItemClickedListener.onItemClicked(listAdapter.getItem(position), actor, position);
             }
+        }
+
+        @Override
+        public boolean longPress(Actor actor, float x, float y) {
+            int position = (Integer) actor.getUserObject();
+            if (onItemLongPressedListener != null && state == ListWidgetState.STEADY) {
+                onItemLongPressedListener.onItemLongPressed(listAdapter.getItem(position), actor, position);
+            }
+            
+            return super.longPress(actor, x, y);
         }
     };
 
@@ -103,9 +115,17 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         
         measure = isVertical ? getHeight() : getWidth();
     }
+    
+    public void setLongPressDuration(float duration) {
+        listItemListener.getGestureDetector().setLongPressSeconds(duration);
+    }
 
     public void setOnItemClickListener(OnItemClickedListener listener) {
         this.onItemClickedListener = listener;
+    }
+    
+    public void setOnItemLongPressedListener(OnItemLongPressedListener listener) { 
+        this.onItemLongPressedListener = listener;
     }
 
     @Override
@@ -192,7 +212,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 continue;
             }
             
-            Actor actorToUpdate = getChildWithUserObject(i);
+            Actor actorToUpdate = getActorWithUserObject(i);
             if (actorToUpdate == null || isActorEmpty(actorToUpdate)) {
                 continue;
             }
@@ -210,7 +230,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         }
     }
 
-    private boolean isActorOutside(Actor actor) {
+    boolean isActorOutside(Actor actor) {
         return isVertical ? getActorPos(actor) + getActorMeasure(actor) * 0.5f < 0 :
                 getActorPos(actor) - getActorMeasure(actor) * 0.5f > measure;
     }
@@ -273,14 +293,14 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
     }
 
     private void handleDragForwardsBlocked() {
-        Actor lastActor = isVertical ? getTailActor() : getChildWithUserObject(0);
+        Actor lastActor = isVertical ? getTailActor() : getActorWithUserObject(0);
         if (isActorNotEmpty(lastActor) && isDragging(System.currentTimeMillis())) {
             moveItems(DragDirection.FORWARD, dragDistance * DEFAULT_BLOCKED_DRAG_MOVE_COEFFICIENT);
         }
     }
 
     private void handleDragBackwardsBlocked() {
-        Actor firstActor = isVertical ? getChildWithUserObject(0) : getTailActor();
+        Actor firstActor = isVertical ? getActorWithUserObject(0) : getTailActor();
         if (isActorNotEmpty(firstActor) && isDragging(System.currentTimeMillis())) {
             moveItems(DragDirection.BACKWARD, dragDistance * DEFAULT_BLOCKED_DRAG_MOVE_COEFFICIENT);
         }
@@ -313,7 +333,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
 
     private void handleSettleHead(float delta) {
         float moveAmount = delta * defaultSettleVelocity;
-        Actor firstItemActor = getChildWithUserObject(0);
+        Actor firstItemActor = getActorWithUserObject(0);
         if (isActorNotEmpty(firstItemActor)) {
             boolean isSteady = isVertical ? getActorOrigin(firstItemActor) + moveAmount >= measure : 
                     getActorPos(firstItemActor) - moveAmount <= headPadding;
@@ -374,9 +394,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 state = ListWidgetState.FLINGING;
                 flingTime = DEFAULT_FLING_TIME;
             }
-            if (Math.abs(touchDownPos - primaryPos) > clickCancelDragThreshold) {
-                cancelTouchOnStage();
-            }
+            
             touchDownPos = 0;
 
             if (allActorsVisible) {
@@ -389,7 +407,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 return;
             }
 
-            Actor firstItemActor = getChildWithUserObject(0);
+            Actor firstItemActor = getActorWithUserObject(0);
             if (isActorNotEmpty(firstItemActor)) {
                 float moveAmount = isVertical ? measure - getActorOrigin(firstItemActor) : getActorPos(firstItemActor);
                 if (moveAmount > headPadding) {
@@ -400,13 +418,6 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             float moveAmount = isVertical ? getActorPos(tailActor) : measure - getActorOrigin(tailActor);
             if (isLastActor(tailActor) && moveAmount > 0) {
                 state = ListWidgetState.SETTLE_TAIL;
-            }
-        }
-
-        private void cancelTouchOnStage() {
-            Stage stage = getStage();
-            if (stage != null) {
-                stage.cancelTouchFocusExcept(this, ListWidget.this);
             }
         }
 
@@ -427,7 +438,6 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             
             if (Math.abs(dragDistance) > clickCancelDragThreshold) {
                 lastTouchDragTime = System.currentTimeMillis();
-                cancelTouchOnStage();
             }
 
             lastDragPoint.set(x, y);
@@ -594,7 +604,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             }
             int actorIndex = getActorIndex(actorToRemove);
             for (int i = actorIndex; i < listAdapter.getCount(); i++) {
-                Actor actor = getChildWithUserObject(i);
+                Actor actor = getActorWithUserObject(i);
                 if (!isActorEmpty(actor) && getActorPos(actor) + dragDistance > measure) {
                     recycledActors.add(actor);
                 } else {
@@ -606,7 +616,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             Actor actorToRemove = isVertical ? getTailActor() : getHeadActor();
             int actorIndex = getActorIndex(actorToRemove);
             for (int i = actorIndex; i >= 0; i--) {
-                Actor actor = getChildWithUserObject(i);
+                Actor actor = getActorWithUserObject(i);
                 if (!isActorEmpty(actor) && getActorOrigin(actor) - dragDistance < 0) {
                     recycledActors.add(actor);
                 } else {
@@ -656,7 +666,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         }
 
         setActorPos(actor, isVertical ? measure - totalMeasureOfPreviousActors : totalMeasureOfPreviousActors);
-        actor.addListener(listItemClickListener);
+        actor.addListener(listItemListener);
         return actor;
     }
 
@@ -727,7 +737,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         return (Integer) userObject;
     }
 
-    private Actor getChildWithUserObject(int index) {
+    public Actor getActorWithUserObject(int index) {
         SnapshotArray<Actor> children = getChildren();
         int count = children.size;
         for (int i = 0; i < count; i++) {
@@ -752,7 +762,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         return actor == EMPTY_ACTOR;
     }
     
-    private float getActorPos (Actor actor) {
+    private float getActorPos(Actor actor) {
         return isVertical ? actor.getY() : actor.getX();
     }
     
@@ -794,5 +804,29 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
         if (isVertical) {
             measure = height;
         }
+    }
+
+    @Override
+    public void setSize(float width, float height) {
+        super.setSize(width, height);
+        measure = isVertical ? height : width;
+    }
+
+    @Override
+    public void setBounds(float x, float y, float width, float height) {
+        super.setBounds(x, y, width, height);
+        measure = isVertical ? height : width;
+    }
+
+    public boolean replaceChildWith(Actor actorToRemove, Actor actorToInsert) {
+        int index = getChildren().indexOf(actorToRemove, false);
+        if (index == -1) return false;
+        
+        actorToInsert.setPosition(actorToRemove.getX(), actorToRemove.getY());
+        actorToInsert.setUserObject(actorToRemove.getUserObject());
+        removeActor(actorToRemove, false);
+        addActorAt(index, actorToInsert);
+        
+        return true;
     }
 }

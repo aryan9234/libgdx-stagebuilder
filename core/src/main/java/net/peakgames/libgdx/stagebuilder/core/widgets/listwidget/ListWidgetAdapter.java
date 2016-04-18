@@ -65,4 +65,9 @@ public abstract class ListWidgetAdapter<T> implements IListWidgetAdapter<T> {
     @Override
     public void actorRemoved(Actor actor) {
     }
+
+    public void swapItems(int pos1, int pos2) {
+        if (pos1 < 0 || pos1 >= items.size() || pos2 < 0 || pos2 >= items.size()) return;
+        Collections.swap(items, pos1, pos2);
+    }
 }

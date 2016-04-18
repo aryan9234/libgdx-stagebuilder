@@ -145,6 +145,7 @@ public class XmlModelBuilder {
         image.setMagFilter(XmlHelper.readStringAttribute(xmlParser, "magFilter"));
         image.setFlipX(XmlHelper.readBooleanAttribute(xmlParser, "flipX", false));
         image.setFlipY(XmlHelper.readBooleanAttribute(xmlParser, "flipY", false));
+        image.setTintColor(XmlHelper.readStringAttribute(xmlParser, "tintColor"));
         return image;
     }
 
@@ -213,6 +214,17 @@ public class XmlModelBuilder {
         button.setTextureSrcDown(XmlHelper.readStringAttribute(xmlParser, "textureSrcDown"));
         button.setTextureSrcDisabled(XmlHelper.readStringAttribute(xmlParser, "textureSrcDisabled"));
         button.setTextureSrcChecked( XmlHelper.readStringAttribute( xmlParser, "textureSrcChecked"));
+        
+        button.setTintColorUp( XmlHelper.readStringAttribute( xmlParser, "tintColorUp"));
+        button.setTintColorDown( XmlHelper.readStringAttribute( xmlParser, "tintColorDown"));
+        button.setTintColorDisabled( XmlHelper.readStringAttribute( xmlParser, "tintColorDisabled"));
+        button.setTintColorChecked( XmlHelper.readStringAttribute( xmlParser, "tintColorChecked"));
+
+        button.setNinePatch(XmlHelper.readBooleanAttribute(xmlParser, "ninepatch", false));
+        button.setNpTop(XmlHelper.readIntAttribute(xmlParser, "npTop", 0));
+        button.setNpBottom(XmlHelper.readIntAttribute(xmlParser, "npBottom", 0));
+        button.setNpLeft(XmlHelper.readIntAttribute(xmlParser, "npLeft", 0));
+        button.setNpRight(XmlHelper.readIntAttribute(xmlParser, "npRight", 0));
     }
 
     private BaseModel buildSliderModel( XmlPullParser xmlPullParser){
@@ -258,6 +270,7 @@ public class XmlModelBuilder {
         textFieldModel.setRightPadding(XmlHelper.readFloatAttribute(xmlParser, "rightPadding", 0.0f));
         textFieldModel.setTopPadding(XmlHelper.readFloatAttribute(xmlParser, "topPadding", 0.0f));
         textFieldModel.setBottomPadding(XmlHelper.readFloatAttribute(xmlParser, "bottomPadding", 0.0f));
+        textFieldModel.setAlignment(XmlHelper.readStringAttribute(xmlParser, "align"));
     	return textFieldModel;
     }
     private BaseModel buildTextAreaModel(XmlPullParser xmlParser) {
@@ -360,6 +373,7 @@ public class XmlModelBuilder {
         model.setScreenPaddingLeft(XmlHelper.readFloatAttribute(xmlParser, "screenPaddingLeft", 0.0f));
         model.setScreenPaddingRight(XmlHelper.readFloatAttribute(xmlParser, "screenPaddingRight", 0.0f));
         model.setTouchable(XmlHelper.readStringAttribute(xmlParser, "touchable", "enabled"));
+        model.setDebugEnabled(XmlHelper.readBooleanAttribute(xmlParser, "debug", false));
     }
 
 }

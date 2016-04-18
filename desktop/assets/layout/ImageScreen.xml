@@ -16,8 +16,8 @@
         <!-- coordinates in a group are relative to group coordinates -->
         <image name="star1" x="0" y="0" atlas="common.atlas" frame="star" />
         <image name="star2" x="0" y="30" atlas="common.atlas" frame="star" />
-        <image name="star3" x="30" y="0" atlas="common.atlas" frame="star" />
-        <image name="star4" x="30" y="30" atlas="common.atlas" frame="star" />
+        <image name="star3" x="30" y="0" atlas="common.atlas" frame="star" tintColor="00FF00"/>
+        <image name="star4" x="30" y="30" atlas="common.atlas" frame="star" color="FF0000"/>
     </group>
 
     <group>
