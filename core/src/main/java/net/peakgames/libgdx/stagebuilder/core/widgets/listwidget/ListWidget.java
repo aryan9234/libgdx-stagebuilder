@@ -4,7 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.SnapshotArray;
@@ -394,6 +397,10 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
                 state = ListWidgetState.FLINGING;
                 flingTime = DEFAULT_FLING_TIME;
             }
+
+            if (Math.abs(touchDownPos - primaryPos) > clickCancelDragThreshold) {
+                cancelTouchOnChildren();
+            }
             
             touchDownPos = 0;
 
@@ -421,6 +428,25 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             }
         }
 
+        private void cancelTouchOnChildren() {
+            cancelChildTouchFocusOf(ListWidget.this);
+        }
+        
+        private void cancelChildTouchFocusOf(Group group) {
+            SnapshotArray<Actor> children = group.getChildren();
+            children.begin();
+            int size = children.size;
+            for (int i=0; i<size; i++) {
+                Actor child = children.get(i);
+                getStage().cancelTouchFocus(child);
+                
+                if (child instanceof Group) {
+                    cancelChildTouchFocusOf((Group) child);
+                }
+            }
+            children.end();
+        }
+
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
             DragDirection dragDirection;
@@ -438,6 +464,7 @@ public class ListWidget extends WidgetGroup implements ICustomWidget, ListWidget
             
             if (Math.abs(dragDistance) > clickCancelDragThreshold) {
                 lastTouchDragTime = System.currentTimeMillis();
+                cancelTouchOnChildren();
             }
 
             lastDragPoint.set(x, y);
