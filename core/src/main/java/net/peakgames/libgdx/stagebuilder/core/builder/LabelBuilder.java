@@ -1,14 +1,15 @@
 package net.peakgames.libgdx.stagebuilder.core.builder;
 
         import com.badlogic.gdx.graphics.Color;
-        import com.badlogic.gdx.scenes.scene2d.Actor;
-        import com.badlogic.gdx.scenes.scene2d.ui.Label;
-        import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
-        import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
-        import net.peakgames.libgdx.stagebuilder.core.model.BaseModel;
-        import net.peakgames.libgdx.stagebuilder.core.model.LabelModel;
-        import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
-        import net.peakgames.libgdx.stagebuilder.core.util.GdxUtils;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
+import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
+import net.peakgames.libgdx.stagebuilder.core.model.BaseModel;
+import net.peakgames.libgdx.stagebuilder.core.model.LabelModel;
+import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
+import net.peakgames.libgdx.stagebuilder.core.util.GdxUtils;
 
 public class LabelBuilder extends ActorBuilder {
 
@@ -22,9 +23,13 @@ public class LabelBuilder extends ActorBuilder {
     public Actor build(BaseModel model) {
         LabelModel labelModel = (LabelModel) model;
         Color color = labelModel.getFontColor() == null ? DEFAULT_LABEL_COLOR : Color.valueOf(labelModel.getFontColor());
-        Label.LabelStyle style = new Label.LabelStyle(assets.getFont(labelModel.getFontName()), color);
-        Label label = new Label(getLocalizedString(labelModel.getText()).replace("\\n", String.format("%n")), style);
 
+        BitmapFont font = assets.getFont(labelModel.getFontName());
+        font.getData().markupEnabled = true;
+        Label.LabelStyle style = new Label.LabelStyle(font, color);
+        String initialText = getLocalizedString(labelModel.getText()).replace("\\n", String.format("%n"));
+        Label label = new Label(initialText, style);
+        
         normalizeModelSize(labelModel, 0, 0);
         setBasicProperties(model, label);
 
@@ -38,6 +43,7 @@ public class LabelBuilder extends ActorBuilder {
             float scaleLabelWidth = labelModel.getLabelScale() * resolutionHelper.getPositionMultiplier();
             scaleLabel(label, scaleLabelWidth);
         }
+        
         return label;
     }
 
@@ -53,5 +59,4 @@ public class LabelBuilder extends ActorBuilder {
             label.setFontScale(label.getStyle().font.getScaleX() * scaleDownFactor);
         }
     }
-
 }
