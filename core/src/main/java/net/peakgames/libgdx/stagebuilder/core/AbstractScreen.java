@@ -78,7 +78,7 @@ public abstract class AbstractScreen implements Screen {
         float width = game.getWidth();
         float height = game.getHeight();
 
-        stageBuilder = new StageBuilder(game.getAssetsInterface(), game.getResolutionHelper(), game.getLocalizationService());
+        stageBuilder = new StageBuilder(game.getActivity(), game.getAssetsInterface(), game.getResolutionHelper(), game.getLocalizationService());
         stage = stageBuilder.build(getFileName(), width, height, KEEP_ASPECT_RATIO);
 
         Gdx.input.setInputProcessor(this.stage);

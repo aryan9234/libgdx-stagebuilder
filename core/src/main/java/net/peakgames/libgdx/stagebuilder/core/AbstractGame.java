@@ -2,6 +2,8 @@ package net.peakgames.libgdx.stagebuilder.core;
 
 import java.util.*;
 
+import android.app.Activity;
+import android.widget.TextView;
 import net.peakgames.libgdx.stagebuilder.core.assets.Assets;
 import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
 import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
@@ -33,6 +35,7 @@ public abstract class AbstractGame implements ApplicationListener {
     private StageBuilderFileHandleResolver fileHandleResolver;
     private SoftKeyboardEventInterface softKeyboardEventInterface;
     private KeyboardManager keyboardManager;
+    private Activity activity;
 
     public abstract List<Vector2> getSupportedResolutions();
     public abstract LocalizationService getLocalizationService();
@@ -49,7 +52,8 @@ public abstract class AbstractGame implements ApplicationListener {
         this.keyboardManager = new KeyboardManager(height);
     }
     
-    public void initialize(int width, int height) {
+    public void initialize(Activity activity, int width, int height) {
+        this.activity = activity;
     	initialize(width, height, TARGET_WIDTH, TARGET_HEIGHT);
     }
 
@@ -366,5 +370,13 @@ public abstract class AbstractGame implements ApplicationListener {
 		this.softKeyboardEventInterface.setSoftKeyboardEventListener(keyboardManager);
         keyboardManager.setKeyboardEventService(this.softKeyboardEventInterface);
 	}
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 }
 

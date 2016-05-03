@@ -1,5 +1,6 @@
 package net.peakgames.libgdx.stagebuilder.core.builder;
 
+import android.app.Activity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -34,11 +35,13 @@ public class StageBuilder {
     private LocalizationService localizationService;
     private ExecutorService groupBuildingPool;
     private StageBuilderListener stageBuilderListener;
+    private Activity activity;
 
-    public StageBuilder(AssetsInterface assets, ResolutionHelper resolutionHelper, LocalizationService localizationService) {
+    public StageBuilder(Activity activity, AssetsInterface assets, ResolutionHelper resolutionHelper, LocalizationService localizationService) {
         this.assets = assets;
         this.resolutionHelper = resolutionHelper;
         this.localizationService = localizationService;
+        this.activity = activity;
 
         registerWidgetBuilders(assets);
         groupBuildingPool = Executors.newFixedThreadPool(1);
@@ -58,7 +61,7 @@ public class StageBuilder {
         builders.put(GroupModel.class, new GroupBuilder(builders, assets, this.resolutionHelper, this.localizationService));
         builders.put(ButtonModel.class, new ButtonBuilder(this.assets, this.resolutionHelper, this.localizationService));
         builders.put(TextButtonModel.class, new TextButtonBuilder(this.assets, this.resolutionHelper, this.localizationService));
-        builders.put(LabelModel.class, new LabelBuilder(this.assets, this.resolutionHelper, this.localizationService));
+        builders.put(LabelModel.class, new LabelBuilder(this.activity, this.assets, this.resolutionHelper, this.localizationService));
         builders.put(SelectBoxModel.class, new SelectBoxBuilder(this.assets, this.resolutionHelper, this.localizationService));
         builders.put(CustomWidgetModel.class, new CustomWidgetBuilder(this.assets, this.resolutionHelper, this.localizationService));
         builders.put(ExternalGroupModel.class, new ExternalGroupModelBuilder(this.assets, this.resolutionHelper, this.localizationService, this));

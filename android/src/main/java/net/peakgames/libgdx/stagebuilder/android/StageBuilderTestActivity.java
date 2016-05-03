@@ -17,9 +17,11 @@ public class StageBuilderTestActivity extends AndroidApplication {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useAccelerometer = false;
         config.useCompass = false;
+
 
         List<Vector2> supportedScreenResolutions = new LinkedList<Vector2>();
         supportedScreenResolutions.add(new Vector2(800, 480));
@@ -27,7 +29,7 @@ public class StageBuilderTestActivity extends AndroidApplication {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         StageBuilderDemo demo = new StageBuilderDemo();
-        demo.initialize(metrics.widthPixels, metrics.heightPixels);
+        demo.initialize(this, metrics.widthPixels, metrics.heightPixels);
 
         initialize(demo, config);
         
