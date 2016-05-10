@@ -19,7 +19,8 @@ import net.peakgames.libgdx.stagebuilder.core.xml.XmlModelBuilder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class StageBuilder {
     public static final String ROOT_GROUP_NAME = "AbsoluteLayoutRootGroup";
@@ -67,6 +68,8 @@ public class StageBuilder {
         builders.put(TextAreaModel.class, new TextAreaBuilder(assets, resolutionHelper, localizationService));
         builders.put(CheckBoxModel.class, new CheckBoxBuilder( assets, resolutionHelper, localizationService));
         builders.put(ToggleWidgetModel.class, new ToggleWidgetBuilder( assets, resolutionHelper, localizationService));
+        builders.put(VerticalGroupModel.class, new VerticalGroupBuilder(builders, assets, resolutionHelper, localizationService));
+        builders.put(HorizontalGroupModel.class, new HorizontalGroupBuilder(builders, assets, resolutionHelper, localizationService));
     }
 
     public Group buildGroup(String fileName) throws Exception {

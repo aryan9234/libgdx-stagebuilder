@@ -3,6 +3,7 @@
     <image name="background_image" atlas="common.atlas" frame="background" type="background"/>
     <textbutton name="external_group_screen" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="70" y="220" width="250" text="Including (files) Groups" fontName="default_font.fnt" />
     <textbutton name="list_widget_screen" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="470" y="220" width="250" text="List Widget" fontName="default_font.fnt"/>
+    <textbutton name="layout_screen" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="470" y="160" width="250" text="Layout Screen" fontName="default_font.fnt"/>
     <textbutton name="asenkron_asset_loading_screen" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="470" y="280" width="250" text="Async Asset Loading" fontName="default_font.fnt" />
     <textbutton name="custom_widget_screen" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="70" y="280" width="250" text="Custom Widgets" fontName="default_font.fnt" />
     <textbutton name="label_screen" atlas="common.atlas" frameUp="green_button" frameDown="green_buttonH" x="470" y="340" width="250" text="Labels" fontName="default_font.fnt" />

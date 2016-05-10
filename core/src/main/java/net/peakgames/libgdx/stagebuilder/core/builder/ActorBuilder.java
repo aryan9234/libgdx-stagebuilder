@@ -30,15 +30,17 @@ public abstract class ActorBuilder {
         this.resolutionHelper = resolutionHelper;
     }
 
-    public static int calculateAlignment(String s) {
+    public static int calculateAlignment(String s, int defaultAlignment) {
         try {
             if (s == null) {
                 // IOS does not catch NullPointerException
-                return Align.left;
+                return defaultAlignment;
             }
+            s = s.toLowerCase();
             String[] sArray = s.split("\\|");
             int result = NO_ALIGN;
             for (String val : sArray) {
+                val = val.trim();
                 if ("left".equals(val)) {
                     result |= Align.left;
                 } else if ("right".equals(val)) {
@@ -51,11 +53,15 @@ public abstract class ActorBuilder {
                     result |= Align.center;
                 }
             }
-            return result;
+            return result == NO_ALIGN ? defaultAlignment : result;
         } catch (Exception e) {
             //ignore
         }
-        return Align.left;
+        return defaultAlignment;
+    }
+    
+    public static int calculateAlignment(String s) {
+        return calculateAlignment(s, Align.left);
     }
 
     public abstract Actor build(BaseModel model);

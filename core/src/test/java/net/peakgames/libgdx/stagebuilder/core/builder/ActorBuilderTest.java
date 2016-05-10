@@ -1,6 +1,7 @@
 package net.peakgames.libgdx.stagebuilder.core.builder;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
 import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
 import net.peakgames.libgdx.stagebuilder.core.model.BaseModel;
@@ -110,6 +111,29 @@ public class ActorBuilderTest {
         assertEquals(50.0f, position.x);
         assertEquals(150.0f, position.y);
 
+    }
+    
+    @Test
+    public void calculateAlignment() {
+        assertEquals(Align.bottom, ActorBuilder.calculateAlignment("bottom"));
+        assertEquals(Align.left, ActorBuilder.calculateAlignment("left"));
+        assertEquals(Align.top, ActorBuilder.calculateAlignment("top"));
+        assertEquals(Align.right, ActorBuilder.calculateAlignment("right"));
+        assertEquals(Align.center, ActorBuilder.calculateAlignment("center", Align.left));
+
+        assertEquals(Align.left, ActorBuilder.calculateAlignment("oi center oi"));
+        assertEquals(Align.left, ActorBuilder.calculateAlignment("leftTop"));
+        assertEquals(Align.center, ActorBuilder.calculateAlignment("", Align.center));
+        assertEquals(Align.top, ActorBuilder.calculateAlignment(null, Align.top));
+
+        assertEquals(Align.bottomLeft, ActorBuilder.calculateAlignment("bottom|left"));
+        assertEquals(Align.bottomLeft, ActorBuilder.calculateAlignment("left|bottom"));
+        assertEquals(Align.bottomLeft, ActorBuilder.calculateAlignment("left | bottom"));
+        assertEquals(Align.topLeft, ActorBuilder.calculateAlignment(" top | left "));
+        assertEquals(Align.bottom| Align.right | Align.left, ActorBuilder.calculateAlignment("left | bottom | right"));
+        assertEquals(Align.topRight, ActorBuilder.calculateAlignment("top|right"));
+
+        assertEquals(Align.bottom, ActorBuilder.calculateAlignment("topitop|bottom"));
     }
 
 }

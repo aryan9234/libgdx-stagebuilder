@@ -121,7 +121,13 @@ public class MenuScreen extends DemoScreen {
             }
         });
 
-
+        findButton("layout_screen").addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                LayoutScreen layoutScreen = new LayoutScreen(game);
+                game.addScreen(layoutScreen);
+            }
+        });
 
     }
 

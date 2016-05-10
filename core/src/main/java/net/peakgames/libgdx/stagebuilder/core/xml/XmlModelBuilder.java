@@ -1,12 +1,11 @@
 package net.peakgames.libgdx.stagebuilder.core.xml;
 
 import com.badlogic.gdx.files.FileHandle;
-
 import net.peakgames.libgdx.stagebuilder.core.model.*;
-
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +22,15 @@ public class XmlModelBuilder {
     public static final String TEXT_AREA_TAG = "TextArea";
     public static final String CHECKBOX_TAG = "CheckBox";
     public static final String TOGGLE_WIDGET_TAG = "ToggleWidget";
+    public static final String VERTICAL_GROUP_TAG = "Vertical";
+    public static final String HORIZONTAL_GROUP_TAG = "Horizontal";
     public static final String LOCALIZED_STRING_PREFIX = "@string/";
+    
+    public static final List<String> PARENT_TAGS_LIST = Arrays.asList(
+            GROUP_TAG.toLowerCase(),
+            VERTICAL_GROUP_TAG.toLowerCase(), 
+            HORIZONTAL_GROUP_TAG.toLowerCase()
+    );
 
     public List<BaseModel> buildModels(FileHandle fileHandle) throws Exception {
         InputStream is = fileHandle.read();
@@ -47,7 +54,7 @@ public class XmlModelBuilder {
                     }
                     break;
                 case XmlPullParser.END_TAG:
-                    if (GROUP_TAG.equalsIgnoreCase(xmlParser.getName())) {
+                    if (canHaveChildren(xmlParser.getName())) {
                         eventType = XmlPullParser.END_DOCUMENT;
                     }
                     break;
@@ -86,11 +93,42 @@ public class XmlModelBuilder {
             model = buildCheckBoxModel( xmlParser);
         } else if ( TOGGLE_WIDGET_TAG.equalsIgnoreCase(tagName)){
             model = buildToggleWidgetModel(xmlParser);
+        } else if ( VERTICAL_GROUP_TAG.equalsIgnoreCase(tagName)){
+            model = buildVerticalGroupModel(xmlParser);
+        } else if ( HORIZONTAL_GROUP_TAG.equalsIgnoreCase(tagName)){
+            model = buildHorizontalGroupModel(xmlParser);
         } else if (isCustomWidget(tagName)) {
             model = buildCustomWidget(xmlParser, tagName);
         } else{
             model = buildExternalGroupModel(xmlParser, tagName);
         }
+        return model;
+    }
+
+    private BaseModel buildHorizontalGroupModel(XmlPullParser xmlParser) throws Exception {
+        return buildOneDimensionalGroupModel(xmlParser, new HorizontalGroupModel());
+    }
+
+    private BaseModel buildVerticalGroupModel(XmlPullParser xmlParser) throws Exception {
+        return buildOneDimensionalGroupModel(xmlParser, new VerticalGroupModel());
+    }
+    
+    private OneDimensionGroupModel buildOneDimensionalGroupModel(XmlPullParser xmlParser, 
+                                                                 OneDimensionGroupModel model)
+            throws Exception {
+        setBaseModelParameters(model, xmlParser);
+        model.setFill(XmlHelper.readBooleanAttribute(xmlParser, "fill", false));
+        model.setReverse(XmlHelper.readBooleanAttribute(xmlParser, "reverse", false));
+        model.setPadLeft(XmlHelper.readFloatAttribute(xmlParser, "padLeft", 0));
+        model.setPadTop(XmlHelper.readFloatAttribute(xmlParser, "padTop", 0));
+        model.setPadRight(XmlHelper.readFloatAttribute(xmlParser, "padRight", 0));
+        model.setPadBottom(XmlHelper.readFloatAttribute(xmlParser, "padBottom", 0));
+        model.setPads(XmlHelper.readFloatArrayAttribute(xmlParser, "pads", 4, 0));
+        model.setAlign(XmlHelper.readAlignmentAttribute(xmlParser, "align", OneDimensionGroupModel.DEFAULT_ALIGNMENT));
+        model.setSpacing(XmlHelper.readFloatAttribute(xmlParser, "spacing", 0));
+        xmlParser.next();
+        List<BaseModel> subModels = buildModels(xmlParser);
+        model.setChildren(subModels);
         return model;
     }
 
@@ -114,6 +152,9 @@ public class XmlModelBuilder {
         return model;
     }
 
+    private boolean canHaveChildren(String tag) {
+        return PARENT_TAGS_LIST.contains(tag.toLowerCase());
+    }
 
     public boolean isCustomWidget(String tagName) {
         return tagName.contains(".");
