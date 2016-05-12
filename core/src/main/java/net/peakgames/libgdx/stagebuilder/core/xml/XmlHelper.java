@@ -2,6 +2,7 @@ package net.peakgames.libgdx.stagebuilder.core.xml;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import net.peakgames.libgdx.stagebuilder.core.builder.ActorBuilder;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -50,7 +51,10 @@ public class XmlHelper {
         return Boolean.valueOf(sValue);
     }
 
-
+	public static int readAlignmentAttribute(XmlPullParser parser, String attributeName, int defaultAlignment) {
+		String sValue = readStringAttribute(parser, attributeName);
+		return ActorBuilder.calculateAlignment(sValue, defaultAlignment);
+	}
 
     public static FileHandle readFileAttribute(XmlPullParser parser, String attributeName, String filePath) {
 		String sValue = parser.getAttributeValue(null, attributeName);
@@ -88,4 +92,21 @@ public class XmlHelper {
             throw new RuntimeException(e);
         }
     }
+
+	public static float[] readFloatArrayAttribute(XmlPullParser xmlParser, String key, int length, float defaultVal) {
+		String sVal = readStringAttribute(xmlParser, key);
+		if (sVal == null) return null;
+		String[] splitted = sVal.split(" ");
+		float[] result = new float[length];
+
+		for (int i = 0; i < length; i++) {
+			if (i >= splitted.length) {
+				result[i] = defaultVal;
+				continue;
+			}
+			result[i] = Float.valueOf(splitted[i]);
+		}
+		
+		return result;
+	}
 }

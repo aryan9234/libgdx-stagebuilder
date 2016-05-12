@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<group>
+    <horizontal name="horizontal" x="10" y="10" width="100" height="10" align="top" reverse="true" padBottom="1">
+        <group name="1" width="10" height="10"></group>
+        <group name="2" width="10" height="10"></group>
+        <group name="3" width="10" height="10"></group>
+    </horizontal>
+
+    <vertical name="vertical" x="10" y="10" width="10" height="120" reverse="true" pads="10 10 20 20" spacing="15">
+        <group name="1" width="10" height="10"></group>
+        <group name="2" width="10" height="10"></group>
+        <group name="3" width="10" height="10"></group>
+    </vertical>
+</group>
