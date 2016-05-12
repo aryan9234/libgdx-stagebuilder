@@ -11,8 +11,7 @@ import net.peakgames.libgdx.stagebuilder.core.assets.AssetsInterface;
 import net.peakgames.libgdx.stagebuilder.core.assets.ResolutionHelper;
 import net.peakgames.libgdx.stagebuilder.core.model.BaseModel;
 import net.peakgames.libgdx.stagebuilder.core.model.GroupModel;
-import net.peakgames.libgdx.stagebuilder.core.model.HorizontalGroupModel;
-import net.peakgames.libgdx.stagebuilder.core.model.VerticalGroupModel;
+import net.peakgames.libgdx.stagebuilder.core.model.OneDimensionGroupModel;
 import net.peakgames.libgdx.stagebuilder.core.services.LocalizationService;
 import net.peakgames.libgdx.stagebuilder.core.xml.XmlModelBuilder;
 import org.junit.Before;
@@ -52,7 +51,7 @@ public class VerticalHorizontalGroupBuilderTest {
         GroupModel group = (GroupModel)models.get(0);
         assertEquals(2, group.getChildren().size());
         
-        HorizontalGroupModel horizontalGroupModel = (HorizontalGroupModel) group.getChildren().get(0);
+        OneDimensionGroupModel horizontalGroupModel = (OneDimensionGroupModel) group.getChildren().get(0);
         List<BaseModel> children = horizontalGroupModel.getChildren();
         assertEquals("1", children.get(0).getName());
         assertEquals("2", children.get(1).getName());
@@ -65,7 +64,7 @@ public class VerticalHorizontalGroupBuilderTest {
         assertEquals(100, horizontalGroupModel.getWidth(), 0);
         assertEquals(Align.top, horizontalGroupModel.getAlign());
 
-        VerticalGroupModel verticalGroupModel = (VerticalGroupModel) group.getChildren().get(1);
+        OneDimensionGroupModel verticalGroupModel = (OneDimensionGroupModel) group.getChildren().get(1);
         List<BaseModel> verticalChildren = verticalGroupModel.getChildren();
         assertEquals("1", verticalChildren.get(0).getName());
         assertEquals("2", verticalChildren.get(1).getName());
@@ -74,7 +73,7 @@ public class VerticalHorizontalGroupBuilderTest {
         assertTrue(verticalGroupModel.isReverse());
         assertFalse(verticalGroupModel.isFill());
         assertArrayEquals(new float[] {10, 10, 20, 20}, verticalGroupModel.getPads(), 0);
-        assertEquals(HorizontalGroupModel.DEFAULT_ALIGNMENT, verticalGroupModel.getAlign());
+        assertEquals(OneDimensionGroupModel.DEFAULT_ALIGNMENT, verticalGroupModel.getAlign());
     }
     
     @Test

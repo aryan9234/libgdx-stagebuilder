@@ -7,8 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OneDimensionGroupModel extends BaseModel {
+    public enum Orientation {
+        VERTICAL, HORIZONTAL
+    }
+    
     public static final int DEFAULT_ALIGNMENT = Align.center;
     
+    private Orientation orientation = Orientation.VERTICAL; 
     private int align;
     private boolean reverse;
     private boolean fill;
@@ -16,6 +21,10 @@ public class OneDimensionGroupModel extends BaseModel {
     private float padTop, padLeft, padBottom, padRight;
     private float[] pads; //0: top, 1: left, 2: bottom, 3: right
     private List<BaseModel> children = new ArrayList<BaseModel>();
+    
+    public OneDimensionGroupModel(Orientation orientation) {
+        this.orientation = orientation;
+    }
 
     public List<BaseModel> getChildren() {
         return children;
@@ -95,6 +104,14 @@ public class OneDimensionGroupModel extends BaseModel {
 
     public void setFill(boolean fill) {
         this.fill = fill;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
     }
 
     public void normalize(ResolutionHelper helper) {

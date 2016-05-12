@@ -106,11 +106,13 @@ public class XmlModelBuilder {
     }
 
     private BaseModel buildHorizontalGroupModel(XmlPullParser xmlParser) throws Exception {
-        return buildOneDimensionalGroupModel(xmlParser, new HorizontalGroupModel());
+        return buildOneDimensionalGroupModel(xmlParser, 
+                new OneDimensionGroupModel(OneDimensionGroupModel.Orientation.HORIZONTAL));
     }
 
     private BaseModel buildVerticalGroupModel(XmlPullParser xmlParser) throws Exception {
-        return buildOneDimensionalGroupModel(xmlParser, new VerticalGroupModel());
+        return buildOneDimensionalGroupModel(xmlParser, 
+                new OneDimensionGroupModel(OneDimensionGroupModel.Orientation.VERTICAL));
     }
     
     private OneDimensionGroupModel buildOneDimensionalGroupModel(XmlPullParser xmlParser, 
